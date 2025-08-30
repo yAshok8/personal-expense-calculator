@@ -1,0 +1,10 @@
+{
+  "databaseList" : [
+    "myData1SQLite.db",
+    "myDataSQLite.db",
+    "dataSQLite.db",
+    "dbForCopy.db",
+    "myDBSQLite.db",
+    "Archive.zip"
+  ]
+}

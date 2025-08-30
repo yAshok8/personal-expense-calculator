@@ -1,0 +1,101 @@
+/*
+!* Table look *!
+.items-table .header {
+  font-weight: 600;
+  border-bottom: 1px solid var(--ion-color-step-150);
+  padding-bottom: 6px;
+}
+
+.body-row {
+  align-items: center;
+  border-bottom: 1px solid var(--ion-color-step-100);
+}
+
+!* Compact date display next to icon *!
+.date-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.date-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid var(--ion-color-step-250);
+  min-width: 52px;
+  text-align: center;
+}
+
+!* Make icon-only buttons tiny + no extra padding *!
+ion-button[fill="clear"] {
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+!* Truncate long text inside ion-input (without limiting actual value) *!
+ion-input.truncate::part(native) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+!* Slightly smaller inputs for tighter rows *!
+ion-input::part(native) {
+  font-size: 14px;
+}
+
+!* Optional: make the new item row visually distinct *!
+.new-item .body-row {
+  background: var(--ion-color-step-50);
+  border-radius: 10px;
+  padding: 6px 4px;
+}
+*/
+
+.form-row {
+  margin-bottom: 6px;
+}
+
+.compact-item {
+  --min-height: 40px;
+  font-size: 14px;
+}
+
+.add-btn-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 8px;
+}
+
+ion-button[size="small"] {
+  --padding-top: 4px;
+  --padding-bottom: 4px;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  font-size: 14px;
+}
+
+.item-inner {
+  height: 10px;
+}
+
+.date-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.date-label {
+  font-size: 13px;
+  margin-left: 4px;
+  white-space: nowrap;
+}
+
+ion-col.center-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

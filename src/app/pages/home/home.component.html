@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Today’s Snapshot -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Today</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <h2>Total Spent</h2>
+            <p class="amount">₹1,250</p>
+          </ion-col>
+          <ion-col>
+            <h2>Total Received</h2>
+            <p class="amount">₹500</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Monthly Overview -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>This Month</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-progress-bar value="0.65" color="tertiary"></ion-progress-bar>
+      <p>65% of your monthly budget spent</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Category Breakdown -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Categories</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Replace with a chart library later -->
+      <ion-list>
+        <ion-item>
+          <ion-icon name="fast-food-outline" slot="start"></ion-icon>
+          <ion-label>Food</ion-label>
+          <ion-badge color="danger">₹600</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="car-outline" slot="start"></ion-icon>
+          <ion-label>Travel</ion-label>
+          <ion-badge color="warning">₹300</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="home-outline" slot="start"></ion-icon>
+          <ion-label>Bills</ion-label>
+          <ion-badge color="success">₹200</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Recent Transactions -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Recent Transactions</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Groceries</ion-label>
+          <ion-note slot="end" color="danger">-₹250</ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>Salary</ion-label>
+          <ion-note slot="end" color="success">+₹5,000</ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>Electricity Bill</ion-label>
+          <ion-note slot="end" color="danger">-₹1,200</ion-note>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
