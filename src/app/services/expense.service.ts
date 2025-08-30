@@ -11,6 +11,16 @@ export class ExpenseDbService {
   constructor(private _dbService: DatabaseService) {
   }
 
+  async getExpenseTotalAmount(day: string): Promise<number> {
+    return this._dbService.executeQuery(async (db) => {
+      const result = await db.query(
+        `SELECT SUM(amount) as total FROM expense_item WHERE date = ?`,
+        [day]
+      );
+      return result.values?.[0]?.total ?? 0;
+    });
+  }
+
   async getExpensesForDay(day: string): Promise<Expense[]> {
     return this._dbService.executeQuery(async (db) => {
       const result = await db.query(`

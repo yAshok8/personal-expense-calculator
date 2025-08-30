@@ -7,13 +7,10 @@ import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {SQLiteService} from './services/sqlite.service';
-import {DetailService} from './services/detail.service';
 import {InitializeAppService} from './services/initialize.app.service';
 
 import {MigrationService} from './services/migrations.service';
-import {ProductRepository} from './repositories/product.repository';
 import {DatabaseService} from './services/database.service';
-import {ProductDefaultQueryRepository} from './repositories/product.default.query.repository';
 import {FormsModule} from "@angular/forms";
 import {TabsPageModule} from "./pages/tabs/tabs.module";
 import { ProfileComponent } from './pages/profile/profile.component';
@@ -29,7 +26,6 @@ export function initializeFactory(init: InitializeAppService) {
     imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, TabsPageModule],
     providers: [
         SQLiteService,
-        DetailService,
         DatabaseService,
         InitializeAppService,
         {
@@ -39,9 +35,6 @@ export function initializeFactory(init: InitializeAppService) {
             multi: true
         },
         MigrationService,
-        ProductRepository,
-        ProductDefaultQueryRepository,
-
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
     bootstrap: [AppComponent],
