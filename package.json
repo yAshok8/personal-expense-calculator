@@ -32,6 +32,7 @@
     "@angular/platform-browser": "^16.0.0",
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@angular/router": "^16.0.0",
+    "@awesome-cordova-plugins/core": "^8.1.0",
     "@awesome-cordova-plugins/splash-screen": "^6.3.0",
     "@awesome-cordova-plugins/status-bar": "^6.3.0",
     "@capacitor-community/electron": "^5.0.1",
@@ -49,8 +50,10 @@
     "@ionic/angular": "^7.0.5",
     "@ionic/pwa-elements": "^3.2.2",
     "buffer": "^6.0.3",
+    "chart.js": "^4.4.4",
     "cordova-plugin-statusbar": "^3.0.0",
     "ionicons": "^7.0.0",
+    "ng2-charts": "^5.0.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

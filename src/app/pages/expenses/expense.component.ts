@@ -14,12 +14,12 @@ interface ExpenseDay {
 
 @Component({
   selector: 'app-expenses',
-  templateUrl: './add-expense.component.html'
+  templateUrl: './expense.component.html'
 })
-export class AddExpenseComponent implements OnInit {
+export class ExpenseComponent implements OnInit {
 
   expenseDates: ExpenseDay[] = [];
-  categories: string[] = [];
+  categories: {id:number, name:string} [] = [];
   expenses: Expense[] = [];
   todaysTotal: number = 0;
 
@@ -40,7 +40,6 @@ export class AddExpenseComponent implements OnInit {
     try {
       this.expenseDates = await this._expenseDBService.getExpenseTotalsByDate();
       this.categories = await this._categoriesService.getCategoriesList();
-
       this.calculateSummary();
       this.calculateTrends();
     } catch (err) {

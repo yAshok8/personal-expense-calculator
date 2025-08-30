@@ -27,11 +27,11 @@
         <ion-grid>
           <ion-row class="ion-align-items-center">
             <ion-col size="2" class="ion-text-center">
-              <ion-icon [name]="getCategoryIcon(item.category)" size="large"></ion-icon>
+              <ion-icon [name]="getCategoryIcon(item.category.name)" size="large"></ion-icon>
             </ion-col>
             <ion-col size="7">
-              <h2>{{ item.item_name }}</h2>
-              <p>{{ item.category }}</p>
+              <h2>{{ item.itemName }}</h2>
+              <p>{{ item.category.name }}</p>
             </ion-col>
             <ion-col size="3" class="ion-text-right">
               <p [ngClass]="{ 'expense': item.amount > 0, 'income': item.amount < 0 }">

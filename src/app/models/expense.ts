@@ -3,7 +3,7 @@ export class Expense {
   constructor(
     public itemName: string,
     public amount: number,
-    public category: string,
+    public category: { id:number, name: string },
     public date: string
   ) {}
 

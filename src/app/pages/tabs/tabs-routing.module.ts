@@ -33,6 +33,11 @@ const routes: Routes = [
       {
         path: 'profile',
         component: ProfileComponent
+      },
+      {
+        path: 'categories',
+        loadChildren: () =>
+          import('../categories/categories.module').then(m => m.CategoriesModule),
       }
     ]
   }

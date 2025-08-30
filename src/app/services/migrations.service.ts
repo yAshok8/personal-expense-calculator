@@ -10,21 +10,41 @@ import {SQLiteService} from './sqlite.service';
 //   );
 // `;
 
-export const createSchemaExpenseItem: string = `
-  CREATE TABLE IF NOT EXISTS expense_item (
-     id INTEGER PRIMARY KEY AUTOINCREMENT,
-     date TEXT,
-     item_name TEXT,
-     amount REAL,
-     category TEXT
-  );
-`;
-
 export const createSchemaExpenseCategory: string = `
   CREATE TABLE IF NOT EXISTS categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT UNIQUE
+    name TEXT UNIQUE NOT NULL
   );
+`;
+
+export const createSchemaExpenseItem: string = `
+  CREATE TABLE IF NOT EXISTS expense_item (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT,
+    item_name TEXT,
+    amount REAL,
+    category_id INTEGER NOT NULL,
+    created_date TEXT DEFAULT (datetime('now')),
+    updated_date TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE ON UPDATE CASCADE
+    );
+
+  CREATE TRIGGER IF NOT EXISTS set_created_date_expense_item
+  AFTER INSERT ON expense_item
+  BEGIN
+  UPDATE expense_item
+  SET created_date = datetime('now'),
+      updated_date = datetime('now')
+  WHERE id = NEW.id;
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS set_updated_date_expense_item
+  AFTER UPDATE ON expense_item
+  BEGIN
+  UPDATE expense_item
+  SET updated_date = datetime('now')
+  WHERE id = NEW.id;
+  END;
 `;
 
 @Injectable()

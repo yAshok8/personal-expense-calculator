@@ -10,7 +10,7 @@ import {ExpenseDbService} from "../../services/expense.service";
 })
 export class AddExpenseModalComponent implements OnInit {
 
-  @Input() categories: any[] = [];
+  @Input() categories: {id: number; name: string}[];
 
   constructor(private _modalCtrl: ModalController,
               private _expenseDBService: ExpenseDbService,
@@ -20,16 +20,14 @@ export class AddExpenseModalComponent implements OnInit {
   minDate: string;
   maxDate: string;
   items: Expense[] = [];
-  newItem: Expense = new Expense('', 0, '', '');
+  newItem: Expense = new Expense('', 0, null, '');
 
   ngOnInit() {
     const today = new Date();
     this.maxDate = today.toISOString(); // today as max
-
     const lastMonth = new Date();
     lastMonth.setMonth(lastMonth.getMonth() - 1);
     this.minDate = lastMonth.toISOString(); // 1 month before today
-
     this.newItem.date = today.toISOString()
   }
 
@@ -40,7 +38,7 @@ export class AddExpenseModalComponent implements OnInit {
         && this.newItem.date) {
       this.newItem.date = this.newItem.date.split('T')[0];
       this.items.push(this.newItem);
-      this.newItem = new Expense('', 0, '', '');
+      this.newItem = new Expense('', 0, null, '');
     }
   }
 

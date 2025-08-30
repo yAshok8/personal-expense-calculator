@@ -14,6 +14,7 @@ import {DatabaseService} from './services/database.service';
 import {FormsModule} from "@angular/forms";
 import {TabsPageModule} from "./pages/tabs/tabs.module";
 import { ProfileComponent } from './pages/profile/profile.component';
+import {NgChartsModule} from "ng2-charts";
 
 
 export function initializeFactory(init: InitializeAppService) {
@@ -21,9 +22,15 @@ export function initializeFactory(init: InitializeAppService) {
 }
 
 @NgModule({
-    // declarations: [AppComponent, AddExpenseComponent, AddExpenseModalComponent, EditExpenseComponent],
     declarations: [AppComponent, ProfileComponent],
-    imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, TabsPageModule],
+    imports: [
+      BrowserModule,
+      IonicModule.forRoot(),
+      AppRoutingModule,
+      FormsModule,
+      TabsPageModule,
+      NgChartsModule
+    ],
     providers: [
         SQLiteService,
         DatabaseService,

@@ -23,7 +23,7 @@
 
       <ion-col size="3">
         <ion-select [(ngModel)]="item.category" placeholder="Category">
-          <ion-select-option *ngFor="let cat of categories" [value]="cat.name">
+          <ion-select-option *ngFor="let cat of categories" [value]="cat.id">
             {{ cat.name }}
           </ion-select-option>
         </ion-select>
@@ -77,7 +77,7 @@
       <!-- Category -->
       <ion-col size="3">
         <ion-select [(ngModel)]="newItem.category" placeholder="Category">
-          <ion-select-option *ngFor="let cat of categories" [value]="cat.name">
+          <ion-select-option *ngFor="let cat of categories" [value]="cat.id">
             {{ cat.name }}
           </ion-select-option>
         </ion-select>

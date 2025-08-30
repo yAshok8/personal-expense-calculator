@@ -11,6 +11,28 @@ export class ExpenseDbService {
   constructor(private _dbService: DatabaseService) {
   }
 
+  async getLatestTransactions(): Promise<Expense[]> {
+    return this._dbService.executeQuery(async (db) => {
+      const result = await db.query(
+        `SELECT e.id, e.item_name, e.amount, e.date,
+              c.id AS category_id, c.name AS category_name
+       FROM expense_item e
+       JOIN categories c ON e.category_id = c.id
+       ORDER BY e.created_date DESC
+       LIMIT 5`
+      );
+
+      return (result.values || []).map(row =>
+        new Expense(
+          row.item_name,
+          row.amount,
+          { id: row.category_id, name: row.category_name },
+          row.date
+        )
+      );
+    });
+  }
+
   async getExpenseTotalAmount(day: string): Promise<number> {
     return this._dbService.executeQuery(async (db) => {
       const result = await db.query(
@@ -23,10 +45,23 @@ export class ExpenseDbService {
 
   async getExpensesForDay(day: string): Promise<Expense[]> {
     return this._dbService.executeQuery(async (db) => {
-      const result = await db.query(`
-      SELECT * from expense_item where date = ?
-    `, [day]);
-      return result.values || [];
+      const result = await db.query(
+        `SELECT e.id, e.item_name, e.amount, e.date, c.id AS category_id, c.name AS category_name
+         FROM expense_item e
+                JOIN categories c ON e.category_id = c.id
+         WHERE e.date = ?`,
+        [day]
+      );
+
+      // Map DB rows to Expense instances
+      return (result.values || []).map(row =>
+        new Expense(
+          row.item_name,
+          row.amount,
+          { id: row.category_id, name: row.category_name },
+          row.date
+        )
+      );
     });
   }
 
@@ -43,20 +78,36 @@ export class ExpenseDbService {
     });
   }
 
-  async saveExpense(
-    items: Expense[]
-  ): Promise<void> {
+  async saveExpense(items: Expense[]): Promise<void> {
     await this._dbService.executeQuery<any>(async (db: SQLiteDBConnection) => {
-      // Insert items
       for (const item of items) {
-        const categoryName = item.category?.trim();
         await db.run(
-          `INSERT INTO expense_item ("date", item_name, amount, category) VALUES (?, ?, ?, ?)`,
-          [item.date.trim(), item.itemName.trim(), item.amount, categoryName]
+          `INSERT INTO expense_item ("date", item_name, amount, category_id) VALUES (?, ?, ?, ?)`,
+          [item.date.trim(), item.itemName.trim(), item.amount, item.category]
         );
       }
     });
   }
+
+  async getCategoryTotalsForMonth(year: number, month: number): Promise<{ name: string; total: number }[]> {
+    const monthStr = month.toString().padStart(2, '0'); // '08'
+    const datePattern = `${year}-${monthStr}-%`;
+
+    return this._dbService.executeQuery(async (db) => {
+      const result = await db.query(
+        `SELECT c.name, IFNULL(SUM(e.amount), 0) AS total
+       FROM categories c
+       LEFT JOIN expense_item e
+         ON e.category_id = c.id AND e.date LIKE ?
+       GROUP BY c.id, c.name
+       HAVING total > 0
+       ORDER BY total DESC`,
+        [datePattern]
+      );
+      return result.values || [];
+    });
+  }
+
 
 
 }
