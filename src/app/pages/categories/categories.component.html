@@ -2,7 +2,7 @@
   <ion-toolbar color="primary">
     <ion-title>Categories</ion-title>
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button (click)="openAddCategoryModal()">
         <ion-icon name="add-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -12,12 +12,35 @@
 
 <ion-content class="ion-padding">
   <ion-card>
+    <ion-card-header>
+      <ion-card-title>Expense Distribution</ion-card-title>
+    </ion-card-header>
     <ion-card-content>
       <canvas baseChart
-              [data]="barChartData"
-              [options]="barChartOptions"
-              [type]="'bar'">
+              #pieChart
+              [data]="pieChartData"
+              [type]="'pie'">
       </canvas>
     </ion-card-content>
   </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Category Breakdown</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let cat of categoryTotals">
+          <ion-icon [name]="getCategoryIcon(cat.name)" slot="start"></ion-icon>
+          <ion-label>
+            <h2>{{ cat.name }}</h2>
+            <p>{{ cat.total | currency:'SAR' }}</p>
+          </ion-label>
+          <ion-badge color="secondary">{{ getPercentage(cat.total) }}%</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+
 </ion-content>

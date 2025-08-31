@@ -1,11 +1,19 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Add a new expense</ion-title>
+  <ion-toolbar>
+    <ion-title>Add Category</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="dismiss()">Close</ion-button>
+      <ion-button (click)="closeModal()">Cancel</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="stacked">Category Name</ion-label>
+    <ion-input [(ngModel)]="categoryName" placeholder="Enter category name"></ion-input>
+  </ion-item>
+
+  <ion-button expand="block" class="ion-margin-top" (click)="addCategory()">
+    Add
+  </ion-button>
 </ion-content>

@@ -11,6 +11,25 @@ export class ExpenseCategoryService {
   constructor(private _dbService: DatabaseService) {
   }
 
+  async addCategory(category: { name: string }): Promise<{ id: number; name: string }> {
+    return this._dbService.executeQuery(async (db) => {
+      // Run the INSERT query
+      await db.query(`INSERT INTO categories (name) VALUES (?)`, [category.name]);
+      // Fetch the last inserted row by name (or use a SELECT with ORDER BY id DESC)
+      const result = await db.query(
+        `SELECT id, name FROM categories WHERE name = ? ORDER BY id DESC LIMIT 1`,
+        [category.name]
+      );
+      const insertedCategory = result.values?.[0];
+      if (!insertedCategory) {
+        throw new Error('Failed to retrieve inserted category');
+      }
+      return insertedCategory as { id: number; name: string };
+    });
+  }
+
+
+
   async getCategoriesList(): Promise<{ id: number; name: string }[]> {
     return this._dbService.executeQuery(async (db) => {
       const result = await db.query(`SELECT id, name FROM categories`);
@@ -45,5 +64,6 @@ export class ExpenseCategoryService {
       await db.run(`DELETE FROM categories`);
     });
   }
+
 
 }
