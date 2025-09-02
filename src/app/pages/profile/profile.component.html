@@ -1,1 +1,52 @@
-<ion-button expand="block" class="ion-margin-top" (click)="clickedMe()">Add</ion-button>
+<!--<ion-content class="ion-padding">-->
+<!--  <ion-button (click)="downloadDatabase()">Download Backup</ion-button>-->
+<!--  <ion-input type="file" (change)="uploadDatabase($event)" accept=".json"></ion-input>-->
+<!--</ion-content>-->
+
+<ion-content class="ion-padding">
+
+  <!-- Backup Section -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Backup Database</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-text-center">
+      <ion-button expand="block" color="primary" (click)="downloadDatabase()">
+        Download Backup
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Restore Section -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Restore Database</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-text-center">
+
+      <!-- File input -->
+      <ion-item>
+        <ion-label>
+          {{ selectedFileName || 'Select backup JSON file...' }}
+        </ion-label>
+        <input type="file" accept=".json" (change)="onFileSelected($event)" hidden #fileInput>
+        <ion-button slot="end" (click)="fileInput.click()">
+          Choose File
+        </ion-button>
+      </ion-item>
+
+      <!-- Restore button -->
+      <ion-button
+        expand="block"
+        color="success"
+        [disabled]="!selectedFile"
+        (click)="restoreDatabase()"
+        class="ion-margin-top"
+      >
+        Restore
+      </ion-button>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

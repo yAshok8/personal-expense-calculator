@@ -11,6 +11,13 @@ export class ExpenseDbService {
   constructor(private _dbService: DatabaseService) {
   }
 
+  async getAllExpenseItems(): Promise<any[]> {
+    return this._dbService.executeQuery(async (db) => {
+      const result = await db.query(`SELECT * FROM expense_item ORDER BY id ASC`);
+      return result.values || [];
+    });
+  }
+
   async getLatestTransactions(): Promise<Expense[]> {
     return this._dbService.executeQuery(async (db) => {
       const result = await db.query(
@@ -70,15 +77,18 @@ export class ExpenseDbService {
     });
   }
 
-  async getExpenseTotalsByDate() {
-    console.log('loading day wise expenses');
+  async getExpenseTotalsByDateCurrentMonth() {
+    const today = new Date();
+    const yearMonth = today.toISOString().slice(0, 7); // "YYYY-MM"
+
     return this._dbService.executeQuery(async (db) => {
       const result = await db.query(`
-        SELECT date, SUM (amount) AS total
+        SELECT date, SUM(amount) AS total
         FROM expense_item
+        WHERE strftime('%Y-%m', date) = ?
         GROUP BY date
         ORDER BY date DESC
-      `);
+      `, [yearMonth]);
       return result.values || [];
     });
   }

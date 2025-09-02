@@ -11,6 +11,13 @@ export class ExpenseCategoryService {
   constructor(private _dbService: DatabaseService) {
   }
 
+  async getAllCategories(): Promise<any[]> {
+    return this._dbService.executeQuery(async (db) => {
+      const result = await db.query(`SELECT * FROM categories ORDER BY id ASC`);
+      return result.values || [];
+    });
+  }
+
   async addCategory(category: { name: string }): Promise<{ id: number; name: string }> {
     return this._dbService.executeQuery(async (db) => {
       // Run the INSERT query
