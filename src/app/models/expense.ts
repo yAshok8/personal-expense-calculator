@@ -1,11 +1,14 @@
 export class Expense {
 
+  public id?: number;
+
   constructor(
     public itemName: string,
     public amount: number,
     public category: { id:number, name: string },
     public date: string
   ) {}
+
 
   // Optional: format date for display
   getFormattedDate(): string {

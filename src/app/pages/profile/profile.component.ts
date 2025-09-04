@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { ExpenseCategoryService } from "../../services/expense-category.service";
 import { ExpenseDbService } from "../../services/expense.service";
 import { Capacitor } from "@capacitor/core";
 import { DbRestoreService } from "../../services/db.restore-service";
 import { ToastController } from '@ionic/angular';
+import { Share } from '@capacitor/share';
+import {Directory, Encoding, Filesystem} from "@capacitor/filesystem";
 
 @Component({
   selector: 'app-profile',
@@ -23,7 +24,6 @@ export class ProfileComponent {
     private toastController: ToastController
   ) {}
 
-  /** Download full database as JSON */
   async downloadDatabase() {
     const categories = await this.catDBService.getAllCategories();
     const expenseItems = await this.expDBService.getAllExpenseItems();
@@ -37,28 +37,37 @@ export class ProfileComponent {
     const fileName = `expense_backup_${Date.now()}.json`;
 
     if (Capacitor.isNativePlatform()) {
-      // Mobile app
-      await Filesystem.writeFile({
-        path: fileName,
-        data: jsonString,
-        directory: Directory.Documents,
-        encoding: Encoding.UTF8
-      });
-      console.log(`Saved on device: ${fileName}`);
+      try {
+        // 1️⃣ Save JSON to a temporary file in app storage
+        const file = await Filesystem.writeFile({
+          path: fileName,
+          data: jsonString,
+          directory: Directory.Cache, // Temporary cache directory
+          encoding: Encoding.UTF8
+        });
+
+        // 2️⃣ Share the file via native share sheet
+        await Share.share({
+          title: 'Export Expense Backup',
+          text: 'Here is your backup file',
+          url: file.uri, // Use the file URI, not a Blob URL
+          dialogTitle: 'Share or Save File'
+        });
+      } catch (err) {
+        console.error('Error sharing file:', err);
+      }
     } else {
-      // Web/PWA
-      const blob = new Blob([jsonString], { type: 'application/json' });
+      const blob = new Blob([jsonString], {type: 'application/json'});
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = fileName;
       a.click();
       window.URL.revokeObjectURL(url);
-      console.log(`Downloaded via browser`);
+      console.log('Downloaded via browser');
     }
   }
 
-  /** Handle file selection for restore */
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {

@@ -55,7 +55,7 @@ export class ExpenseDbService {
     });
   }
 
-  async getExpensesForDay(day: string): Promise<Expense[]> {
+  async getExpensesForDate(day: string): Promise<Expense[]> {
     return this._dbService.executeQuery(async (db) => {
       const result = await db.query(
         `SELECT e.id, e.item_name, e.amount, e.date, c.id AS category_id, c.name AS category_name
@@ -66,13 +66,16 @@ export class ExpenseDbService {
       );
 
       // Map DB rows to Expense instances
-      return (result.values || []).map(row =>
-        new Expense(
-          row.item_name,
-          row.amount,
-          {id: row.category_id, name: row.category_name},
-          row.date
-        )
+      return (result.values || []).map(row => {
+          const newExpense = new Expense(
+            row.item_name,
+            row.amount,
+            {id: row.category_id, name: row.category_name},
+            row.date
+          );
+          newExpense.id = row.id;
+          return newExpense;
+        }
       );
     });
   }
@@ -104,4 +107,15 @@ export class ExpenseDbService {
       }
     });
   }
+
+  async deleteExpense(id: number): Promise<void> {
+    await this._dbService.executeQuery<any>(async (db: SQLiteDBConnection) => {
+      await db.run(
+        `DELETE FROM expense_item WHERE id = ?`,
+        [id]
+      );
+      console.log(`Expense successfully deleted.`);
+    });
+  }
+
 }

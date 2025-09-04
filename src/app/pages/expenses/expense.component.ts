@@ -14,18 +14,17 @@ interface ExpenseDay {
 
 @Component({
   selector: 'app-expenses',
-  templateUrl: './expense.component.html'
+  templateUrl: './expense.component.html',
+  styleUrls: ['./expense.component.css'],
 })
 export class ExpenseComponent implements OnInit {
 
   expenseDates: ExpenseDay[] = [];
   categories: {id:number, name:string} [] = [];
-  expenses: Expense[] = [];
-  todaysTotal: number = 0;
 
   // New fields
   monthlyTotal: number = 0;
-  totalTransactions: number = 0;
+  totalDays: number = 0;
 
   constructor(
     private _expenseDBService: ExpenseDbService,
@@ -38,7 +37,7 @@ export class ExpenseComponent implements OnInit {
 
   async ionViewWillEnter() {
     try {
-      this.expenseDates = await this._expenseDBService.getExpenseTotalsByDate();
+      this.expenseDates = await this._expenseDBService.getExpenseTotalsByDateCurrentMonth();
       this.categories = await this._categoriesService.getCategoriesList();
       this.calculateSummary();
       this.calculateTrends();
@@ -61,22 +60,13 @@ export class ExpenseComponent implements OnInit {
     const { data } = await modal.onDidDismiss();
 
     if (data) {
-      this.expenseDates = await this._expenseDBService.getExpenseTotalsByDate();
-      this.expenses.push(data);
-      this.updateTodaysTotal();
+      this.expenseDates = await this._expenseDBService.getExpenseTotalsByDateCurrentMonth();
       this.calculateSummary();
       this.calculateTrends();
     }
   }
 
-  updateTodaysTotal() {
-    const today = new Date().toISOString().split('T')[0];
-    this.todaysTotal = this.expenses
-      .filter((e) => e.date === today)
-      .reduce((sum, e) => sum + Number(e.amount), 0);
-  }
 
-  // ✅ Calculate monthly total + transactions
   calculateSummary() {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
@@ -88,10 +78,9 @@ export class ExpenseComponent implements OnInit {
       })
       .reduce((sum, item) => sum + item.total, 0);
 
-    this.totalTransactions = this.expenseDates.length;
+    this.totalDays = this.expenseDates.length;
   }
 
-  // ✅ Add "trend" for each day (compared to previous day)
   calculateTrends() {
     this.expenseDates.sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()

@@ -17,10 +17,56 @@
       <ion-card-title>This Month</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <h2>Total Spent: <strong>SAR {{ monthlyTotal }}</strong></h2>
-      <p>Number of transactions: {{ totalTransactions }}</p>
+      <h2>Total Spent: <strong>SAR {{ monthlyTotal | number:'1.2-2'}}</strong></h2>
+      <p>Number of days expense occurred: {{ totalDays }}</p>
     </ion-card-content>
   </ion-card>
+
+<!--  <ion-grid>
+    <ion-row>
+      &lt;!&ndash; Start Date Column &ndash;&gt;
+      <ion-col size="4" class="date-picker-col">
+        <label class="date-label">Start Date</label>
+        <ion-datetime-button datetime="startDate"></ion-datetime-button>
+      </ion-col>
+
+      &lt;!&ndash; End Date Column &ndash;&gt;
+      <ion-col size="4" class="date-picker-col">
+        <label class="date-label">End Date</label>
+        <ion-datetime-button datetime="endDate"></ion-datetime-button>
+      </ion-col>
+
+      <ion-col size="4" class="date-picker-col">
+        <ion-button [disabled]="dateError">Submit</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  &lt;!&ndash; Start Date Modal &ndash;&gt;
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        id="startDate"
+        presentation="date"
+        [(ngModel)]="startDate"
+        (ionChange)="validateDates()"
+      ></ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  &lt;!&ndash; End Date Modal &ndash;&gt;
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        id="endDate"
+        presentation="date"
+        [(ngModel)]="endDate"
+        (ionChange)="validateDates()"
+      ></ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <ion-button [disabled]="dateError">Submit</ion-button>-->
 
   <!-- Expense List -->
   <ion-list>

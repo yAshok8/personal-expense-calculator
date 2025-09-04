@@ -2,6 +2,7 @@ import { Expense } from "../../models/expense";
 import { Component, OnInit } from "@angular/core";
 import { ExpenseDbService } from "../../services/expense.service";
 import { ActivatedRoute } from "@angular/router";
+import { AlertController } from "@ionic/angular";
 
 @Component({
   selector: 'items-list',
@@ -14,8 +15,9 @@ export class ItemsListComponent implements OnInit {
   totalForDay: number = 0;
 
   constructor(
-    private expenseService: ExpenseDbService,
-    private router: ActivatedRoute
+    private expenseDBService: ExpenseDbService,
+    private router: ActivatedRoute,
+    private alertController: AlertController
   ) {}
 
   async ngOnInit() {}
@@ -23,12 +25,13 @@ export class ItemsListComponent implements OnInit {
   async ionViewWillEnter() {
     this.date = this.router.snapshot.params['date'] || '';
     if (this.date) {
-      this.items = await this.expenseService.getExpensesForDay(this.date);
+      this.items = await this.expenseDBService.getExpensesForDate(this.date);
       this.calculateTotal();
     }
   }
 
   calculateTotal() {
+    console.log("calculating total");
     this.totalForDay = this.items.reduce((sum, item) => sum + Number(item.amount), 0);
   }
 
@@ -43,4 +46,29 @@ export class ItemsListComponent implements OnInit {
       default: return 'cash-outline';
     }
   }
+
+  async confirmDelete(item: Expense) {
+    const alert = await this.alertController.create({
+      header: 'Confirm Delete',
+      message: `Are you sure you want to delete ${item.itemName}?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: async () => {
+            await this.expenseDBService.deleteExpense(item.id!);
+            this.items = this.items.filter(i => i.id !== item.id);
+            this.calculateTotal();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
 }

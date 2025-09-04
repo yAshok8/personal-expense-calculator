@@ -29,7 +29,7 @@
             <ion-col size="2" class="ion-text-center">
               <ion-icon [name]="getCategoryIcon(item.category.name)" size="large"></ion-icon>
             </ion-col>
-            <ion-col size="7">
+            <ion-col size="6">
               <h2>{{ item.itemName }}</h2>
               <p>{{ item.category.name }}</p>
             </ion-col>
@@ -37,6 +37,11 @@
               <p [ngClass]="{ 'expense': item.amount > 0, 'income': item.amount < 0 }">
                 {{ item.amount > 0 ? '-' : '+' }} SAR {{ item.amount | number:'1.2-2' }}
               </p>
+            </ion-col>
+            <ion-col size="1" class="ion-text-center">
+              <ion-button fill="clear" color="danger" (click)="confirmDelete(item)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>
