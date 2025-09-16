@@ -10,12 +10,15 @@ import {Expense} from "../../models/expense";
 export class AddExpenseModalComponent implements OnInit {
 
   @Input() categories: {id: number; name: string}[];
+  @Input() beneficiaries: {id: number; name: string}[];
   @Input() expense?: Expense;
 
   itemName: string = '';
   amount: number = 0;
   categoryId: number | null = null;
+  beneficiaryId: number | null = null;
   date: string = new Date().toISOString().split('T')[0];
+  spent: boolean = true;
 
   constructor(private _modalCtrl: ModalController){}
 
@@ -34,7 +37,7 @@ export class AddExpenseModalComponent implements OnInit {
     }
 
     const category = this.categories.find(c => c.id === this.categoryId)!;
-    const newExpense = new Expense(this.itemName, this.amount, category, this.date);
+    const newExpense = new Expense(this.itemName, this.amount, category, this.date, true, null);
 
     this._modalCtrl.dismiss(newExpense);
   }

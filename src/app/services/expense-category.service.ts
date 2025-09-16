@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
 import {DatabaseService} from "./database.service";
-import {SQLiteDBConnection} from "@capacitor-community/sqlite";
-import {Expense} from "../models/expense";
 
 @Injectable({
   providedIn: 'root',
@@ -35,8 +33,7 @@ export class ExpenseCategoryService {
     });
   }
 
-
-
+  //todo: Check this looks like a duplicate one
   async getCategoriesList(): Promise<{ id: number; name: string }[]> {
     return this._dbService.executeQuery(async (db) => {
       const result = await db.query(`SELECT id, name FROM categories`);

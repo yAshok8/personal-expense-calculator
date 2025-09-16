@@ -5,6 +5,7 @@ import {ExpenseCategoryService} from "../../services/expense-category.service";
 import {Expense} from "../../models/expense";
 import {CommonModule} from "@angular/common";
 import {ExpenseDbService} from "../../services/expense.service";
+import {ExpenseBeneficiaryService} from "../../services/beneficiary.service";
 
 @Component({
   selector: 'app-add-expense',
@@ -16,11 +17,14 @@ import {ExpenseDbService} from "../../services/expense.service";
 export class AddExpenseComponent {
 
   categories: {id:number, name:string} [] = [];
+  beneficiaries: {id:number, name:string} [] = [];
+
   expenses: Expense[] = [];
 
   constructor(
     private modalCtrl: ModalController,
     private _categoriesService: ExpenseCategoryService,
+    private _beneficiariesService: ExpenseBeneficiaryService,
     private navCtrl: NavController,
     private alertCtrl: AlertController,
     private _expenseDBService: ExpenseDbService,
@@ -30,6 +34,7 @@ export class AddExpenseComponent {
   async ionViewWillEnter() {
     try {
       this.categories = await this._categoriesService.getCategoriesList();
+      this.beneficiaries = await this._beneficiariesService.fetchAllBeneficiaries();
     } catch (err) {
       console.error("Error loading categories:", err);
     }
@@ -38,7 +43,10 @@ export class AddExpenseComponent {
   async openAddExpenseModal() {
     const modal = await this.modalCtrl.create({
       component: AddExpenseModalComponent,
-      componentProps: { categories: this.categories },
+      componentProps: {
+        categories: this.categories,
+        beneficiaries: this.beneficiaries
+      },
     });
 
     await modal.present();

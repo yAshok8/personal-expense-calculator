@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from "@ionic/angular";
-import { Expense } from "../../models/expense";
-import { AddExpenseModalComponent } from "../add-expense-modal/add-expense-modal.component";
-import { ExpenseDbService } from "../../services/expense.service";
-import { ExpenseCategoryService } from "../../services/expense-category.service";
-import { Router } from "@angular/router";
+import {Component, OnInit} from '@angular/core';
+import {ModalController} from "@ionic/angular";
+import {ExpenseDbService} from "../../services/expense.service";
+import {ExpenseCategoryService} from "../../services/expense-category.service";
+import {Router} from "@angular/router";
+import {ExpenseBeneficiaryService} from "../../services/beneficiary.service";
 
 interface ExpenseDay {
   date: string;
@@ -21,6 +20,7 @@ export class ExpenseComponent implements OnInit {
 
   expenseDates: ExpenseDay[] = [];
   categories: {id:number, name:string} [] = [];
+  beneficiaries: {id:number, name:string} [] = [];
 
   // New fields
   monthlyTotal: number = 0;
@@ -30,6 +30,7 @@ export class ExpenseComponent implements OnInit {
     private _expenseDBService: ExpenseDbService,
     private modalCtrl: ModalController,
     private _categoriesService: ExpenseCategoryService,
+    private _beneficiariesService: ExpenseBeneficiaryService,
     private _router: Router
   ) {}
 
@@ -43,6 +44,7 @@ export class ExpenseComponent implements OnInit {
     try {
       this.expenseDates = await this._expenseDBService.getExpenseTotalsByDateCurrentMonth();
       this.categories = await this._categoriesService.getCategoriesList();
+      this.beneficiaries = await this._beneficiariesService.fetchAllBeneficiaries();
       this.calculateSummary();
       this.calculateTrends();
     } catch (err) {
@@ -53,23 +55,6 @@ export class ExpenseComponent implements OnInit {
   openItems(date: string) {
     this._router.navigate(['/items-list', date]);
   }
-
-  async openAddExpenseModal() {
-    const modal = await this.modalCtrl.create({
-      component: AddExpenseModalComponent,
-      componentProps: { categories: this.categories },
-    });
-
-    await modal.present();
-    const { data } = await modal.onDidDismiss();
-
-    if (data) {
-      this.expenseDates = await this._expenseDBService.getExpenseTotalsByDateCurrentMonth();
-      this.calculateSummary();
-      this.calculateTrends();
-    }
-  }
-
 
   calculateSummary() {
     const currentMonth = new Date().getMonth();

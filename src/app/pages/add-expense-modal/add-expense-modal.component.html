@@ -29,6 +29,15 @@
   </ion-item>
 
   <ion-item>
+    <ion-label position="stacked">Beneficiary</ion-label>
+    <ion-select [(ngModel)]="beneficiaryId">
+      <ion-select-option *ngFor="let b of beneficiaries" [value]="b.id">
+        {{ b.name }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
     <ion-label position="stacked">Date</ion-label>
     <ion-datetime presentation="date" [(ngModel)]="date"></ion-datetime>
   </ion-item>

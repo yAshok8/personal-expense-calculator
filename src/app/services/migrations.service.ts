@@ -2,9 +2,15 @@ import {Injectable} from '@angular/core';
 import {DatabaseService} from './database.service';
 import {SQLiteService} from './sqlite.service';
 
-
 export const createSchemaExpenseCategory: string = `
   CREATE TABLE IF NOT EXISTS categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL
+  );
+`;
+
+export const createSchemaExpenseBeneficiary: string = `
+  CREATE TABLE IF NOT EXISTS beneficiaries (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL
   );
@@ -17,9 +23,11 @@ export const createSchemaExpenseItem: string = `
     item_name TEXT,
     amount REAL,
     category_id INTEGER NOT NULL,
+    beneficiary_id INTEGER NOT NULL,
     created_date TEXT DEFAULT (datetime('now')),
     updated_date TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (beneficiary_id) REFERENCES beneficiaries(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
   CREATE TRIGGER IF NOT EXISTS set_created_date_expense_item
@@ -47,17 +55,11 @@ export class MigrationService {
   }
 
   async migrate(): Promise<any> {
-    // await this.createExpenseDaysTable();
-    await this.createExpenseItem();
     await this.createExpenseCatagory();
-    await this.insertDefaultCategories();
+    await this.createExpenseBeneficiary();
+    await this.insertDefaultBeneficiaries();
+    await this.createExpenseItem();
   }
-
-  // async createExpenseDaysTable(): Promise<any> {
-  //   await this.databaseService.executeQuery(async (db) => {
-  //     await db.execute(createSchemaExpenseDays);
-  //   });
-  // }
 
   async createExpenseItem(): Promise<any> {
     await this.databaseService.executeQuery(async (db) => {
@@ -71,21 +73,28 @@ export class MigrationService {
     });
   }
 
-  async insertDefaultCategories(): Promise<any> {
-    const categories = ["Food", "Transport", "Bills", "Leisure"];
-    const insertCategorySql = `INSERT OR IGNORE INTO categories (name) VALUES (?);`;
+  async createExpenseBeneficiary(): Promise<any> {
+    await this.databaseService.executeQuery(async (db) => {
+      await db.execute(createSchemaExpenseBeneficiary);
+    });
+  }
+
+  async insertDefaultBeneficiaries(): Promise<any> {
+    console.log("Inserting default beneficiaries");
+    const beneficiaries = ["Ashok", "Babita", "Vedant", "Family", "Saudi Home"];
+    const insertBeneficiarySql = `INSERT
+    OR IGNORE INTO beneficiaries (name) VALUES (?);`;
 
     return await this.databaseService.executeQuery(async (db) => {
       try {
-        for (const category of categories) {
-          await db.run(insertCategorySql, [category]);
+        for (const beneficiary of beneficiaries) {
+          await db.run(insertBeneficiarySql, [beneficiary]);
         }
-        console.log("Default categories inserted successfully.");
+        console.log("Default beneficiaries inserted successfully.");
       } catch (err) {
         console.error("Error inserting default categories:", err);
         throw err;
       }
     });
   }
-
- }
+}

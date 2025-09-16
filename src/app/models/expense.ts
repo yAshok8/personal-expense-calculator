@@ -7,8 +7,8 @@ export class Expense {
     public amount: number,
     public category: { id:number, name: string },
     public date: string,
-    // public spent: boolean,
-    // public beneficiary:  { id:number, name: string }
+    public spent: boolean,
+    public beneficiary:  { id:number, name: string }
   ) {}
 
   getFormattedDate(): string {

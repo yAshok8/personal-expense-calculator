@@ -27,9 +27,12 @@ export class ExpenseDbService {
                 e.amount,
                 e.date,
                 c.id AS category_id,
-                c.name AS category_name
+                c.name AS category_name,
+                b.id as beneficiary_id,
+                b.name AS beneficiary_name
          FROM expense_item e
                 JOIN categories c ON e.category_id = c.id
+                JOIN beneficiaries b on e.beneficiary_id = b.id
          ORDER BY e.created_date DESC LIMIT 5`
       );
 
@@ -38,7 +41,9 @@ export class ExpenseDbService {
           row.item_name,
           row.amount,
           {id: row.category_id, name: row.category_name},
-          row.date
+          row.date,
+          row.spent,
+          {id: row.beneficiary_id, name: row.beneficiary_name}
         )
       );
     });
@@ -59,11 +64,20 @@ export class ExpenseDbService {
   async getExpensesForDate(day: string): Promise<Expense[]> {
     return this._dbService.executeQuery(async (db) => {
       const result = await db.query(
-        `SELECT e.id, e.item_name, e.amount, e.date, c.id AS category_id, c.name AS category_name
-         FROM expense_item e
-                JOIN categories c ON e.category_id = c.id
-         WHERE e.date = ?`,
-        [day]
+      `SELECT
+                        e.id,
+                        e.item_name,
+                        e.amount,
+                        e.date,
+                        c.id AS category_id,
+                        c.name AS category_name,
+                        b.id as beneficiary_id,
+                        b.name AS beneficiary_name
+               FROM expense_item e
+                    JOIN categories c ON e.category_id = c.id
+                    JOIN beneficiaries b on e.beneficiary_id = b.id
+               WHERE e.date = ?`,
+                [day]
       );
 
       // Map DB rows to Expense instances
@@ -72,7 +86,9 @@ export class ExpenseDbService {
             row.item_name,
             row.amount,
             {id: row.category_id, name: row.category_name},
-            row.date
+            row.date,
+            row.spent,
+            {id: row.beneficiary_id, name: row.beneficiary_name}
           );
           newExpense.id = row.id;
           return newExpense;
