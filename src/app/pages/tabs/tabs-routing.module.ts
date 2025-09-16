@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TabsComponent } from './tabs.component';
 import { HomeComponent } from "../home/home.component";
 import { ProfileComponent } from "../profile/profile.component";
+import {AddExpenseComponent} from "../add-expense/add-expense.component";
 
 const routes: Routes = [
   {
@@ -12,8 +13,10 @@ const routes: Routes = [
       {
         path: 'home',
         component: HomeComponent
-        // loadChildren: () =>
-        //   import('../home/home.module').then(m => m.HomeModule)
+      },
+      {
+        path: 'add-expense',
+        component: AddExpenseComponent
       },
       {
         path: 'expenses',

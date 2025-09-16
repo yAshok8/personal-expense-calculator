@@ -3,13 +3,6 @@ import {DatabaseService} from './database.service';
 import {SQLiteService} from './sqlite.service';
 
 
-// export const createSchemaExpenseDays: string = `
-// CREATE TABLE IF NOT EXISTS expense_day (
-//     date TEXT PRIMARY KEY,
-//     total_amount REAL
-//   );
-// `;
-
 export const createSchemaExpenseCategory: string = `
   CREATE TABLE IF NOT EXISTS categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

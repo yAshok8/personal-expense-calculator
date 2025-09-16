@@ -45,25 +45,37 @@ export class ExpenseCategoryService {
   }
 
   async getCategoryTotalsForMonth(year: number, month: number): Promise<{ id: number; name: string; total: number }[]> {
-    // Format month as two digits
     const monthStr = month.toString().padStart(2, '0');
-    const datePattern = `${year}-${monthStr}-%`; // e.g., 2025-08-%
+    const datePattern = `${year}-${monthStr}-%`;
 
-    return this._dbService.executeQuery(async (db) => {
-      const result = await db.query(
+    const result = await this._dbService.executeQuery(async (db) => {
+      const res = await db.query(
         `
-          SELECT c.id, c.name, IFNULL(SUM(e.amount), 0) AS total
-          FROM categories c
-                 LEFT JOIN expense_item e
-                           ON e.category_id = c.id AND e.date LIKE ?
-          GROUP BY c.id, c.name
-          HAVING total > 0
-          ORDER BY total DESC
-        `,
+        SELECT c.id, c.name, IFNULL(SUM(e.amount), 0) AS total
+        FROM categories c
+               LEFT JOIN expense_item e
+                         ON e.category_id = c.id AND e.date LIKE ?
+        GROUP BY c.id, c.name
+        HAVING total > 0
+        ORDER BY total DESC
+      `,
         [datePattern]
       );
-      return result.values || [];
+      return res.values || [];
     });
+
+    if (!result || result.length === 0) return [];
+
+    // Take top 4 categories
+    const top4 = result.slice(0, 5);
+
+    // Group the rest into "Others"
+    if (result.length > 5) {
+      const othersTotal = result.slice(5).reduce((sum, r) => sum + r.total, 0);
+      top4.push({ id: -1, name: "Others", total: othersTotal });
+    }
+
+    return top4;
   }
 
   async truncateCategories(): Promise<void> {

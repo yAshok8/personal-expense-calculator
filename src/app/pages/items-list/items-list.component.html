@@ -15,7 +15,7 @@
       <ion-card-title>Summary</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <h2>Total: <strong>SAR {{ totalForDay }}</strong></h2>
+      <h2>Total: <strong>SAR {{ totalForDay | number:'1.2-2' }}</strong></h2>
       <p>Items: {{ items.length }}</p>
     </ion-card-content>
   </ion-card>

@@ -35,6 +35,10 @@ export class ExpenseComponent implements OnInit {
 
   ngOnInit() {}
 
+  openAddExpenseComponent() {
+    this._router.navigate(['/add-expense']);
+  }
+
   async ionViewWillEnter() {
     try {
       this.expenseDates = await this._expenseDBService.getExpenseTotalsByDateCurrentMonth();
@@ -83,7 +87,7 @@ export class ExpenseComponent implements OnInit {
 
   calculateTrends() {
     this.expenseDates.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
 
     for (let i = 1; i < this.expenseDates.length; i++) {

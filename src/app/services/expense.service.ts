@@ -11,6 +11,7 @@ export class ExpenseDbService {
   constructor(private _dbService: DatabaseService) {
   }
 
+
   async getAllExpenseItems(): Promise<any[]> {
     return this._dbService.executeQuery(async (db) => {
       const result = await db.query(`SELECT * FROM expense_item ORDER BY id ASC`);
@@ -86,23 +87,25 @@ export class ExpenseDbService {
 
     return this._dbService.executeQuery(async (db) => {
       const result = await db.query(`
-        SELECT date, SUM(amount) AS total
-        FROM expense_item
-        WHERE strftime('%Y-%m', date) = ?
-        GROUP BY date
-        ORDER BY date DESC
-      `, [yearMonth]);
+      SELECT date, SUM(amount) AS total
+      FROM expense_item
+      WHERE strftime('%Y-%m', date) = ?
+      GROUP BY date
+      ORDER BY date DESC
+    `, [yearMonth]);
       return result.values || [];
     });
   }
 
+
   async saveExpense(items: Expense[]): Promise<void> {
     await this._dbService.executeQuery<any>(async (db: SQLiteDBConnection) => {
       for (const item of items) {
+        console.log(item);
         await db.run(
           `INSERT INTO expense_item ("date", item_name, amount, category_id)
            VALUES (?, ?, ?, ?)`,
-          [item.date.trim(), item.itemName.trim(), item.amount, item.category]
+          [item.date.trim(), item.itemName.trim(), item.amount, item.category.id]
         );
       }
     });

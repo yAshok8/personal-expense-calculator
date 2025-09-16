@@ -2,8 +2,8 @@
   <ion-toolbar color="primary">
     <ion-title>Expenses</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="openAddExpenseModal()">
-        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
+      <ion-button (click)="openAddExpenseComponent()">
+        Add Expenses
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -22,52 +22,6 @@
     </ion-card-content>
   </ion-card>
 
-<!--  <ion-grid>
-    <ion-row>
-      &lt;!&ndash; Start Date Column &ndash;&gt;
-      <ion-col size="4" class="date-picker-col">
-        <label class="date-label">Start Date</label>
-        <ion-datetime-button datetime="startDate"></ion-datetime-button>
-      </ion-col>
-
-      &lt;!&ndash; End Date Column &ndash;&gt;
-      <ion-col size="4" class="date-picker-col">
-        <label class="date-label">End Date</label>
-        <ion-datetime-button datetime="endDate"></ion-datetime-button>
-      </ion-col>
-
-      <ion-col size="4" class="date-picker-col">
-        <ion-button [disabled]="dateError">Submit</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-  &lt;!&ndash; Start Date Modal &ndash;&gt;
-  <ion-modal [keepContentsMounted]="true">
-    <ng-template>
-      <ion-datetime
-        id="startDate"
-        presentation="date"
-        [(ngModel)]="startDate"
-        (ionChange)="validateDates()"
-      ></ion-datetime>
-    </ng-template>
-  </ion-modal>
-
-  &lt;!&ndash; End Date Modal &ndash;&gt;
-  <ion-modal [keepContentsMounted]="true">
-    <ng-template>
-      <ion-datetime
-        id="endDate"
-        presentation="date"
-        [(ngModel)]="endDate"
-        (ionChange)="validateDates()"
-      ></ion-datetime>
-    </ng-template>
-  </ion-modal>
-
-  <ion-button [disabled]="dateError">Submit</ion-button>-->
-
   <!-- Expense List -->
   <ion-list>
     <ion-card *ngFor="let item of expenseDates" (click)="openItems(item.date)">
@@ -76,7 +30,7 @@
           <ion-row class="ion-align-items-center">
             <ion-col size="8">
               <h2>{{ item.date | date:'EEE, MMM d' }}</h2>
-              <p>Total: <strong>SAR {{ item.total }}</strong></p>
+              <p>Total: <strong>SAR {{ item.total | number:'1.2-2' }}</strong></p>
             </ion-col>
             <ion-col size="4" class="ion-text-right">
               <ion-badge [color]="item.total > 100 ? 'danger' : 'success'">

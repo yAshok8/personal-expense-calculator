@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <!-- Custom back button -->
+    <ion-buttons slot="start">
+      <ion-button (click)="confirmBack()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Add Expenses</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="openAddExpenseModal()">
+        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-list *ngIf="expenses.length > 0; else noData">
+    <ion-item *ngFor="let exp of expenses; let i = index">
+      <ion-label>
+        <h2>{{ exp.itemName }}</h2>
+        <p>{{ exp.amount }} SAR | {{ exp.category.name }} | {{ exp.getFormattedDate() }}</p>
+      </ion-label>
+      <ion-button fill="clear" color="primary" (click)="editExpense(i)">
+        Edit
+      </ion-button>
+      <ion-button fill="clear" color="danger" (click)="deleteExpense(i)">
+        Delete
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #noData>
+    <ion-text color="medium">
+      <p>No expenses added yet. Click "+" to add one.</p>
+    </ion-text>
+  </ng-template>
+
+  <ion-button
+    expand="block"
+    color="success"
+    *ngIf="expenses.length > 0"
+    (click)="submitAllExpenses()">
+    Submit All Expenses
+  </ion-button>
+
+</ion-content>

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Add a new expense</ion-title>
+    <ion-title>{{ expense ? 'Edit Expense' : 'Add Expense' }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">Close</ion-button>
     </ion-buttons>
@@ -9,112 +9,32 @@
 
 <ion-content class="ion-padding">
 
-  <!-- Existing items in a table-like grid -->
-  <ion-grid *ngIf="items.length > 0" class="items-table">
+  <ion-item>
+    <ion-label position="stacked">Item Name</ion-label>
+    <ion-input [(ngModel)]="itemName"></ion-input>
+  </ion-item>
 
-    <ion-row *ngFor="let item of items; let i = index" class="form-row">
-      <ion-col size="3">
-        <ion-input class="truncate" [(ngModel)]="item.itemName" placeholder="Item Name"></ion-input>
-      </ion-col>
+  <ion-item>
+    <ion-label position="stacked">Amount</ion-label>
+    <ion-input type="number" [(ngModel)]="amount"></ion-input>
+  </ion-item>
 
-      <ion-col size="2">
-        <ion-input type="number" [(ngModel)]="item.amount" placeholder="Price"></ion-input>
-      </ion-col>
+  <ion-item>
+    <ion-label position="stacked">Category</ion-label>
+    <ion-select [(ngModel)]="categoryId">
+      <ion-select-option *ngFor="let c of categories" [value]="c.id">
+        {{ c.name }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
 
-      <ion-col size="3">
-        <ion-select [(ngModel)]="item.category" placeholder="Category">
-          <ion-select-option *ngFor="let cat of categories" [value]="cat.id">
-            {{ cat.name }}
-          </ion-select-option>
-        </ion-select>
-      </ion-col>
+  <ion-item>
+    <ion-label position="stacked">Date</ion-label>
+    <ion-datetime presentation="date" [(ngModel)]="date"></ion-datetime>
+  </ion-item>
 
-      <ion-col size="3" class="date-col">
-        <!-- Trigger button: icon only -->
-        <ion-button id="editDateBtn{{i}}" size="small" fill="clear">
-          <ion-icon slot="icon-only" name="calendar-outline"></ion-icon>
-        </ion-button>
-        <div class="date-pill">{{ item.date | date:'MMM d' }}</div>
-      </ion-col>
-
-        <!-- Popover with datetime -->
-      <ion-popover trigger="editDateBtn{{i}}" showBackdrop="true">
-        <ng-template>
-          <ion-datetime
-            presentation="date"
-            [(ngModel)]="item.date"
-            [min]="minDate"
-            [max]="maxDate"
-          >
-          </ion-datetime>
-        </ng-template>
-      </ion-popover>
-
-      <ion-col size="1" class="add-btn-col">
-        <ion-button fill="solid" color="danger" size="small" (click)="removeItem(i)">
-          <ion-icon name="trash-outline"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-  <ion-grid>
-    <ion-row class="form-row" align-items-center>
-      <!-- Item Name -->
-      <ion-col size="3">
-        <ion-item lines="none" class="compact-item">
-          <ion-input class="truncate" [(ngModel)]="newItem.itemName" placeholder="Item Name"></ion-input>
-        </ion-item>
-      </ion-col>
-
-      <!-- Price -->
-      <ion-col size="2" class="center-col">
-        <ion-item lines="none" class="compact-item">
-          <ion-input type="number" [(ngModel)]="newItem.amount" placeholder="Price"></ion-input>
-        </ion-item>
-      </ion-col>
-
-      <!-- Category -->
-      <ion-col size="3">
-        <ion-select [(ngModel)]="newItem.category" placeholder="Category">
-          <ion-select-option *ngFor="let cat of categories" [value]="cat.id">
-            {{ cat.name }}
-          </ion-select-option>
-        </ion-select>
-      </ion-col>
-
-      <ion-col size="3" class="date-col">
-        <ion-button id="newDateBtn" size="small" fill="clear">
-          <ion-icon slot="icon-only" name="calendar-outline"></ion-icon>
-        </ion-button>
-
-        <span class="date-label">
-          {{ newItem.date ? (newItem.date | date:'MMM d') : '' }}
-        </span>
-      </ion-col>
-
-      <ion-popover trigger="newDateBtn" showBackdrop="true">
-        <ng-template>
-          <ion-datetime
-            presentation="date"
-            [(ngModel)]="newItem.date"
-            [min]="minDate"
-            [max]="maxDate"
-          >
-          </ion-datetime>
-        </ng-template>
-      </ion-popover>
-
-      <!-- Add Button -->
-      <ion-col size="1" class="add-btn-col">
-        <ion-button size="small" fill="solid" color="primary" (click)="addItem()">
-          <ion-icon name="add"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-  <ion-button *ngIf="items.length > 0" expand="block" color="primary" (click)="submitItems()">
-    Submit All
+  <ion-button expand="block" (click)="addExpense()">
+    {{ expense ? 'Save Changes' : 'Add Expense' }}
   </ion-button>
+
 </ion-content>

@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ModalController, ToastController} from "@ionic/angular";
+import {ModalController} from "@ionic/angular";
 import {Expense} from "../../models/expense";
-import {ExpenseDbService} from "../../services/expense.service";
 
 @Component({
   selector: 'app-expenses-modal',
@@ -11,70 +10,37 @@ import {ExpenseDbService} from "../../services/expense.service";
 export class AddExpenseModalComponent implements OnInit {
 
   @Input() categories: {id: number; name: string}[];
+  @Input() expense?: Expense;
 
-  constructor(private _modalCtrl: ModalController,
-              private _expenseDBService: ExpenseDbService,
-              private _toastController: ToastController) {
-  }
+  itemName: string = '';
+  amount: number = 0;
+  categoryId: number | null = null;
+  date: string = new Date().toISOString().split('T')[0];
 
-  minDate: string;
-  maxDate: string;
-  items: Expense[] = [];
-  newItem: Expense = new Expense('', 0, null, '');
+  constructor(private _modalCtrl: ModalController){}
 
   ngOnInit() {
-    const today = new Date();
-    this.maxDate = today.toISOString(); // today as max
-    const lastMonth = new Date();
-    lastMonth.setMonth(lastMonth.getMonth() - 1);
-    this.minDate = lastMonth.toISOString(); // 1 month before today
-    this.newItem.date = today.toISOString()
-  }
-
-  addItem() {
-    if (this.newItem.itemName
-        && this.newItem.amount != null
-        && this.newItem.category
-        && this.newItem.date) {
-      this.newItem.date = this.newItem.date.split('T')[0];
-      this.items.push(this.newItem);
-      this.newItem = new Expense('', 0, null, '');
+    if (this.expense) {
+      this.itemName = this.expense.itemName;
+      this.amount = this.expense.amount;
+      this.categoryId = this.expense.category.id;
+      this.date = this.expense.date;
     }
   }
 
-  removeItem(index: number) {
-    this.items.splice(index, 1);
-  }
+  addExpense() {
+    if (!this.itemName || !this.amount || !this.categoryId || !this.date) {
+      return;
+    }
 
-  submitItems() {
-    this._expenseDBService.saveExpense(this.items)
-      .then(() => this._toastController.create({
-        message: 'Expenses submitted successfully ✅',
-        duration: 2000,
-        color: 'success',
-        position: 'top'
-      }))
-      .then((toast) => toast.present())
-      .then(() => {
-        // clear local state after success
-        this.sendAndDismiss();
-      })
-      .catch((err) => {
-        // optional: show an error toast
-        this._toastController.create({
-          message: `Failed to submit expenses: ${err?.message ?? err}`,
-          duration: 3000,
-          color: 'danger',
-          position: 'top'
-        }).then(t => t.present());
-      });
-  }
+    const category = this.categories.find(c => c.id === this.categoryId)!;
+    const newExpense = new Expense(this.itemName, this.amount, category, this.date);
 
-  sendAndDismiss() {
-    this._modalCtrl.dismiss(this.items);
+    this._modalCtrl.dismiss(newExpense);
   }
 
   dismiss() {
     this._modalCtrl.dismiss(null); // cancel
   }
+
 }

@@ -47,7 +47,7 @@
         <ion-item *ngFor="let cat of categoryTotals">
           <ion-icon [name]="getCategoryIcon(cat.name)" slot="start"></ion-icon>
           <ion-label>{{ cat.name }}</ion-label>
-          <ion-badge color="primary">₹{{ cat.total }}</ion-badge>
+          <ion-badge color="primary">₹{{ cat.total | number:'1.2-2' }}</ion-badge>
         </ion-item>
       </ion-list>
     </ion-card-content>
