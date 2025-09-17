@@ -26,6 +26,7 @@ export class ItemsListComponent implements OnInit {
     this.date = this.router.snapshot.params['date'] || '';
     if (this.date) {
       this.items = await this.expenseDBService.getExpensesForDate(this.date);
+      console.log(this.items);
       this.calculateTotal();
     }
   }
@@ -45,6 +46,10 @@ export class ItemsListComponent implements OnInit {
       case 'entertainment': return 'film-outline';
       default: return 'cash-outline';
     }
+  }
+
+  async edit(item: Expense) {
+    console.log(item);
   }
 
   async confirmDelete(item: Expense) {

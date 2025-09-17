@@ -28,6 +28,7 @@ export class AddExpenseModalComponent implements OnInit {
       this.amount = this.expense.amount;
       this.categoryId = this.expense.category.id;
       this.date = this.expense.date;
+      this.beneficiaryId = this.expense.beneficiary.id;
     }
   }
 
@@ -37,7 +38,8 @@ export class AddExpenseModalComponent implements OnInit {
     }
 
     const category = this.categories.find(c => c.id === this.categoryId)!;
-    const newExpense = new Expense(this.itemName, this.amount, category, this.date, true, null);
+    const beneficiary = this.beneficiaries.find(c => c.id === this.beneficiaryId)!;
+    const newExpense = new Expense(this.itemName, this.amount, category, this.date, true, beneficiary);
 
     this._modalCtrl.dismiss(newExpense);
   }

@@ -20,24 +20,37 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Expense Items -->
   <ion-list *ngIf="items.length > 0; else noData">
     <ion-card *ngFor="let item of items">
       <ion-card-content>
         <ion-grid>
           <ion-row class="ion-align-items-center">
+            <!-- Icon -->
             <ion-col size="2" class="ion-text-center">
               <ion-icon [name]="getCategoryIcon(item.category.name)" size="large"></ion-icon>
             </ion-col>
-            <ion-col size="6">
+
+            <!-- Item details -->
+            <ion-col size="4">
               <h2>{{ item.itemName }}</h2>
               <p>{{ item.category.name }}</p>
             </ion-col>
-            <ion-col size="3" class="ion-text-right">
+
+            <!-- Amount -->
+            <ion-col size="4" class="ion-text-right">
               <p [ngClass]="{ 'expense': item.amount > 0, 'income': item.amount < 0 }">
                 {{ item.amount > 0 ? '-' : '+' }} SAR {{ item.amount | number:'1.2-2' }}
               </p>
             </ion-col>
+
+            <!-- Edit button -->
+            <ion-col size="1" class="ion-text-center">
+              <ion-button fill="clear" color="warning" (click)="edit(item)">
+                <ion-icon name="create-outline"></ion-icon>
+              </ion-button>
+            </ion-col>
+
+            <!-- Delete button -->
             <ion-col size="1" class="ion-text-center">
               <ion-button fill="clear" color="danger" (click)="confirmDelete(item)">
                 <ion-icon name="trash-outline"></ion-icon>
@@ -48,6 +61,7 @@
       </ion-card-content>
     </ion-card>
   </ion-list>
+
 
   <!-- No Data Placeholder -->
   <ng-template #noData>

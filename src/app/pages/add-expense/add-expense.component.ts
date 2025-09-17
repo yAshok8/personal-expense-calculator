@@ -35,6 +35,7 @@ export class AddExpenseComponent {
     try {
       this.categories = await this._categoriesService.getCategoriesList();
       this.beneficiaries = await this._beneficiariesService.fetchAllBeneficiaries();
+      console.log(this.beneficiaries);
     } catch (err) {
       console.error("Error loading categories:", err);
     }

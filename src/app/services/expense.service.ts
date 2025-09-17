@@ -119,9 +119,9 @@ export class ExpenseDbService {
       for (const item of items) {
         console.log(item);
         await db.run(
-          `INSERT INTO expense_item ("date", item_name, amount, category_id)
-           VALUES (?, ?, ?, ?)`,
-          [item.date.trim(), item.itemName.trim(), item.amount, item.category.id]
+          `INSERT INTO expense_item ("date", item_name, amount, category_id, beneficiary_id, spent)
+           VALUES (?, ?, ?, ?, ?, ?)`,
+          [item.date.trim(), item.itemName.trim(), item.amount, item.category.id, item.beneficiary.id, item.spent]
         );
       }
     });

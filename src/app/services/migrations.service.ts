@@ -24,6 +24,7 @@ export const createSchemaExpenseItem: string = `
     amount REAL,
     category_id INTEGER NOT NULL,
     beneficiary_id INTEGER NOT NULL,
+    spent INTEGER NOT NULL DEFAULT 1,
     created_date TEXT DEFAULT (datetime('now')),
     updated_date TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -57,14 +58,16 @@ export class MigrationService {
   async migrate(): Promise<any> {
     await this.createExpenseCatagory();
     await this.createExpenseBeneficiary();
-    await this.insertDefaultBeneficiaries();
+    // await this.insertDefaultBeneficiaries();
     await this.createExpenseItem();
   }
 
   async createExpenseItem(): Promise<any> {
+    console.log(`creating expense_item table`);
     await this.databaseService.executeQuery(async (db) => {
       await db.execute(createSchemaExpenseItem);
     });
+    console.log(`created expense_item table`);
   }
 
   async createExpenseCatagory(): Promise<any> {

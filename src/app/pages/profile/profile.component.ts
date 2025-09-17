@@ -6,6 +6,7 @@ import { DbRestoreService } from "../../services/db.restore-service";
 import { ToastController } from '@ionic/angular';
 import { Share } from '@capacitor/share';
 import {Directory, Encoding, Filesystem} from "@capacitor/filesystem";
+import {ExpenseBeneficiaryService} from "../../services/beneficiary.service";
 
 @Component({
   selector: 'app-profile',
@@ -20,16 +21,19 @@ export class ProfileComponent {
   constructor(
     private catDBService: ExpenseCategoryService,
     private expDBService: ExpenseDbService,
+    private beneficiaryDBService: ExpenseBeneficiaryService,
     private restoreDbService: DbRestoreService,
     private toastController: ToastController
   ) {}
 
   async downloadDatabase() {
     const categories = await this.catDBService.getAllCategories();
+    const beneficiaries = await this.beneficiaryDBService.fetchAllBeneficiaries();
     const expenseItems = await this.expDBService.getAllExpenseItems();
 
     const data = {
       categories: categories || [],
+      beneficiaries: beneficiaries || [],
       expense_item: expenseItems || []
     };
 
