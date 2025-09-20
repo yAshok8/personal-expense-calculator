@@ -1,14 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {ModalController} from "@ionic/angular";
 import {ExpenseDbService} from "../../services/expense.service";
-import {ExpenseCategoryService} from "../../services/expense-category.service";
 import {Router} from "@angular/router";
-import {ExpenseBeneficiaryService} from "../../services/beneficiary.service";
 
 interface ExpenseDay {
   date: string;
-  total: number;
-  trend?: 'up' | 'down' | 'equal';
+  spent: number;
+  received: number;
 }
 
 @Component({
@@ -19,18 +16,13 @@ interface ExpenseDay {
 export class ExpenseComponent implements OnInit {
 
   expenseDates: ExpenseDay[] = [];
-  categories: {id:number, name:string} [] = [];
-  beneficiaries: {id:number, name:string} [] = [];
-
-  // New fields
-  monthlyTotal: number = 0;
+  monthlyTotalSpent: number = 0;
+  monthlyTotalReceived: number = 0;
   totalDays: number = 0;
+  averageExpensePerDay: number = 0;
 
   constructor(
     private _expenseDBService: ExpenseDbService,
-    private modalCtrl: ModalController,
-    private _categoriesService: ExpenseCategoryService,
-    private _beneficiariesService: ExpenseBeneficiaryService,
     private _router: Router
   ) {}
 
@@ -42,11 +34,8 @@ export class ExpenseComponent implements OnInit {
 
   async ionViewWillEnter() {
     try {
-      this.expenseDates = await this._expenseDBService.getExpenseTotalsByDateCurrentMonth();
-      this.categories = await this._categoriesService.getCategoriesList();
-      this.beneficiaries = await this._beneficiariesService.fetchAllBeneficiaries();
+      this.expenseDates = await this._expenseDBService.getPerDayTotalsForCurrentMonth();
       this.calculateSummary();
-      this.calculateTrends();
     } catch (err) {
       console.error("Error loading expense dates and categories:", err);
     }
@@ -57,35 +46,19 @@ export class ExpenseComponent implements OnInit {
   }
 
   calculateSummary() {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-
-    this.monthlyTotal = this.expenseDates
-      .filter(item => {
-        const d = new Date(item.date);
-        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-      })
-      .reduce((sum, item) => sum + item.total, 0);
-
+    //todo: This query is executed frequently, check if you can optimize it
+    this.monthlyTotalSpent = this.expenseDates
+      .reduce((sum, item) => sum + item.spent, 0);
+    this.monthlyTotalReceived = this.expenseDates
+      .reduce((sum, item) => sum + item.received, 0);
     this.totalDays = this.expenseDates.length;
+    this.averageExpensePerDay = this.averagePerDaySpent();
   }
 
-  calculateTrends() {
-    this.expenseDates.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
-
-    for (let i = 1; i < this.expenseDates.length; i++) {
-      const prev = this.expenseDates[i - 1];
-      const curr = this.expenseDates[i];
-
-      if (curr.total > prev.total) {
-        curr.trend = 'up';
-      } else if (curr.total < prev.total) {
-        curr.trend = 'down';
-      } else {
-        curr.trend = 'equal';
-      }
-    }
+  averagePerDaySpent(): number {
+    if (!this.expenseDates.length) return 0;
+    const totalSpent = this.expenseDates
+      .reduce((sum, d) => sum + (d.spent || 0), 0);
+    return totalSpent / this.expenseDates.length;
   }
 }

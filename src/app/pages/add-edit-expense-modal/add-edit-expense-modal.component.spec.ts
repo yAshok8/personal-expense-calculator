@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddExpenseModalComponent } from './add-expense-modal.component';
+import { AddEditExpenseModalComponent } from './add-edit-expense-modal.component';
 
 describe('AddExpenseModalComponent', () => {
-  let component: AddExpenseModalComponent;
-  let fixture: ComponentFixture<AddExpenseModalComponent>;
+  let component: AddEditExpenseModalComponent;
+  let fixture: ComponentFixture<AddEditExpenseModalComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AddExpenseModalComponent]
+      declarations: [AddEditExpenseModalComponent]
     });
-    fixture = TestBed.createComponent(AddExpenseModalComponent);
+    fixture = TestBed.createComponent(AddEditExpenseModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

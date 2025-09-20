@@ -1,0 +1,56 @@
+
+ion-card h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* styles.scss */
+.totals {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+  font-size: 0.9rem;
+  align-items: center;
+}
+
+.spent {
+  color: var(--ion-color-danger);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.received {
+  color: var(--ion-color-success);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* styles.scss */
+.text-red {
+  color: var(--ion-color-danger);
+}
+.text-green {
+  color: var(--ion-color-success);
+}
+.amount-red {
+  font-weight: bold;
+  color: var(--ion-color-danger);
+}
+.amount-green {
+  font-weight: bold;
+  color: var(--ion-color-success);
+}
+.amount-gray {
+  font-weight: bold;
+  color: var(--ion-color-medium);
+}
+.days-text {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+}
+
+
+

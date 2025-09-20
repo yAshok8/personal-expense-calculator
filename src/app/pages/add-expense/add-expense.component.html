@@ -20,11 +20,18 @@
 <ion-content class="ion-padding">
 
   <ion-list *ngIf="expenses.length > 0; else noData">
-    <ion-item *ngFor="let exp of expenses; let i = index">
+    <ion-item
+      *ngFor="let exp of expenses; let i = index"
+      [ngClass]="exp.spent ? 'spent-item' : 'received-item'">
+
       <ion-label>
         <h2>{{ exp.itemName }}</h2>
         <p>{{ exp.amount }} SAR | {{ exp.category.name }} | {{ exp.getFormattedDate() }}</p>
+        <p [ngClass]="exp.spent ? 'text-red' : 'text-green'">
+          {{ exp.spent ? 'Spent' : 'Received' }}
+        </p>
       </ion-label>
+
       <ion-button fill="clear" color="primary" (click)="editExpense(i)">
         Edit
       </ion-button>

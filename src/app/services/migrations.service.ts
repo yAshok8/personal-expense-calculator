@@ -63,11 +63,9 @@ export class MigrationService {
   }
 
   async createExpenseItem(): Promise<any> {
-    console.log(`creating expense_item table`);
     await this.databaseService.executeQuery(async (db) => {
       await db.execute(createSchemaExpenseItem);
     });
-    console.log(`created expense_item table`);
   }
 
   async createExpenseCatagory(): Promise<any> {
@@ -83,7 +81,6 @@ export class MigrationService {
   }
 
   async insertDefaultBeneficiaries(): Promise<any> {
-    console.log("Inserting default beneficiaries");
     const beneficiaries = ["Ashok", "Babita", "Vedant", "Family", "Saudi Home"];
     const insertBeneficiarySql = `INSERT
     OR IGNORE INTO beneficiaries (name) VALUES (?);`;
@@ -93,9 +90,8 @@ export class MigrationService {
         for (const beneficiary of beneficiaries) {
           await db.run(insertBeneficiarySql, [beneficiary]);
         }
-        console.log("Default beneficiaries inserted successfully.");
       } catch (err) {
-        console.error("Error inserting default categories:", err);
+        console.error("Error inserting default beneficiaries:", err);
         throw err;
       }
     });

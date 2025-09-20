@@ -69,6 +69,7 @@ export class ExpenseDbService {
                         e.item_name,
                         e.amount,
                         e.date,
+                        e.spent,
                         c.id AS category_id,
                         c.name AS category_name,
                         b.id as beneficiary_id,
@@ -97,7 +98,29 @@ export class ExpenseDbService {
     });
   }
 
-  async getExpenseTotalsByDateCurrentMonth() {
+  async getPerDayTotalsForCurrentMonth() {
+    const today = new Date();
+    const yearMonth = today.toISOString().slice(0, 7);
+
+    return this._dbService.executeQuery(async (db) => {
+      const result = await db.query(
+        `
+          SELECT
+            date,
+            SUM(CASE WHEN spent = 1 THEN amount ELSE 0 END) AS spent,
+            SUM(CASE WHEN spent = 0 THEN amount ELSE 0 END) AS received
+          FROM expense_item
+          WHERE strftime('%Y-%m', date) = ?
+          GROUP BY date
+          ORDER BY date DESC
+        `,
+        [yearMonth]
+      );
+      return result.values || [];
+    });
+  }
+
+  async getPerDayReceivedForCurrentMonth() {
     const today = new Date();
     const yearMonth = today.toISOString().slice(0, 7); // "YYYY-MM"
 
@@ -105,7 +128,7 @@ export class ExpenseDbService {
       const result = await db.query(`
       SELECT date, SUM(amount) AS total
       FROM expense_item
-      WHERE strftime('%Y-%m', date) = ?
+      WHERE strftime('%Y-%m', date) = ? AND spent = 0
       GROUP BY date
       ORDER BY date DESC
     `, [yearMonth]);
@@ -121,7 +144,7 @@ export class ExpenseDbService {
         await db.run(
           `INSERT INTO expense_item ("date", item_name, amount, category_id, beneficiary_id, spent)
            VALUES (?, ?, ?, ?, ?, ?)`,
-          [item.date.trim(), item.itemName.trim(), item.amount, item.category.id, item.beneficiary.id, item.spent]
+          [item.date.trim(), item.itemName.trim(), item.amount, item.category.id, item.beneficiary.id, item.spent ? 1 : 0]
         );
       }
     });
@@ -136,5 +159,30 @@ export class ExpenseDbService {
       console.log(`Expense successfully deleted.`);
     });
   }
+
+  async updateExpense(item: Expense): Promise<void> {
+    await this._dbService.executeQuery<any>(async (db: SQLiteDBConnection) => {
+      await db.run(
+      `UPDATE expense_item
+         SET date = ?,
+             item_name = ?,
+             amount = ?,
+             category_id = ?,
+             beneficiary_id = ?,
+             spent = ?
+         WHERE id = ?`,
+          [
+            item.date.trim(),
+            item.itemName.trim(),
+            item.amount,
+            item.category.id,
+            item.beneficiary.id,
+            item.spent,
+            item.id
+          ]
+        );
+    });
+  }
+
 
 }

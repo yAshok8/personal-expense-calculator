@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {AlertController, IonicModule, ModalController, NavController, ToastController} from "@ionic/angular";
-import {AddExpenseModalComponent} from "../add-expense-modal/add-expense-modal.component";
+import {AddEditExpenseModalComponent} from "../add-edit-expense-modal/add-edit-expense-modal.component";
 import {ExpenseCategoryService} from "../../services/expense-category.service";
 import {Expense} from "../../models/expense";
 import {CommonModule} from "@angular/common";
@@ -35,7 +35,6 @@ export class AddExpenseComponent {
     try {
       this.categories = await this._categoriesService.getCategoriesList();
       this.beneficiaries = await this._beneficiariesService.fetchAllBeneficiaries();
-      console.log(this.beneficiaries);
     } catch (err) {
       console.error("Error loading categories:", err);
     }
@@ -43,19 +42,16 @@ export class AddExpenseComponent {
 
   async openAddExpenseModal() {
     const modal = await this.modalCtrl.create({
-      component: AddExpenseModalComponent,
+      component: AddEditExpenseModalComponent,
       componentProps: {
         categories: this.categories,
         beneficiaries: this.beneficiaries
       },
     });
-
     await modal.present();
     const { data } = await modal.onDidDismiss();
-
     if (data) {
       this.expenses.push(data as Expense);
-      console.log(this.expenses);
     }
   }
 
@@ -64,9 +60,14 @@ export class AddExpenseComponent {
   }
 
   async editExpense(index: number) {
+    console.log(this.expenses[index]);
     const modal = await this.modalCtrl.create({
-      component: AddExpenseModalComponent,
-      componentProps: { categories: this.categories, expense: this.expenses[index] }
+      component: AddEditExpenseModalComponent,
+      componentProps: {
+        categories: this.categories,
+        beneficiaries: this.beneficiaries,
+        expense: this.expenses[index]
+      }
     });
 
     await modal.present();
@@ -78,6 +79,7 @@ export class AddExpenseComponent {
   }
 
   async submitAllExpenses() {
+    console.log(this.expenses);
     this._expenseDBService.saveExpense(this.expenses)
       .then(() => this._toastController.create({
         message: 'Expenses submitted successfully ✅',
@@ -113,7 +115,7 @@ export class AddExpenseComponent {
       });
       await alert.present();
     } else {
-      this.navCtrl.back();  // no expenses, just go back
+      this.navCtrl.back();
     }
   }
 }

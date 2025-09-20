@@ -26,7 +26,6 @@ export class DbRestoreService {
       updated_date: string;
     }[];
   }): Promise<void> {
-    console.log("jsonData");
     console.log(jsonData);
     await this._dbService.executeQuery(async (db) => {
       // 1️⃣ Clear old data
@@ -55,6 +54,7 @@ export class DbRestoreService {
 
       // 4️⃣ Insert all expense items with original IDs and timestamps
       for (const item of jsonData.expense_item) {
+        console.log(item);
         await db.run(
           `INSERT INTO expense_item (id, date, item_name, amount, category_id, beneficiary_id, spent, created_date, updated_date)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,

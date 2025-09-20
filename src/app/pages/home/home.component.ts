@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
     const year = today.getFullYear();
     const month = today.getMonth() + 1;
     this.categoryTotals = await this._categoryService.getCategoryTotalsForMonth(year, month);
-    this.latestTransactions = await this._expenseService.getLatestTransactions();
+    this.latestTransactions = await this._expenseService.getLatestTransactions(); //todo: remove spent and beneficiary for this call
   }
 
   getCategoryIcon(name: string): string {

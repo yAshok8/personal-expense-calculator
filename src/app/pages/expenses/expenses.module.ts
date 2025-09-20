@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import {ExpenseComponent} from "./expense.component";
-import {AddExpenseModalComponent} from "../add-expense-modal/add-expense-modal.component";
+import {AddEditExpenseModalComponent} from "../add-edit-expense-modal/add-edit-expense-modal.component";
 import {ExpensesPageRoutingModule} from "./expense-routing";
 
 
@@ -16,7 +16,7 @@ import {ExpensesPageRoutingModule} from "./expense-routing";
   ],
   declarations: [
     ExpenseComponent,
-    AddExpenseModalComponent
+    AddEditExpenseModalComponent
   ]
 })
 export class ExpensesPageModule {}

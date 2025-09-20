@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ expense ? 'Edit Expense' : 'Add Expense' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block"
+                    [color]="expense.spent ? 'danger' : 'medium'"
+                    (click)="expense.spent = true">
+          <ion-icon name="arrow-up-circle-outline" slot="start"></ion-icon>
+          Spent
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block"
+                    [color]="expense.spent === false ? 'success' : 'medium'"
+                    (click)="expense.spent = false">
+          <ion-icon name="arrow-down-circle-outline" slot="start"></ion-icon>
+          Received
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <ion-item>
+    <ion-label position="stacked">Item Name</ion-label>
+    <ion-input [(ngModel)]="expense.itemName"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Amount</ion-label>
+    <ion-input type="number" [(ngModel)]="expense.amount"></ion-input>
+  </ion-item>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">Category</ion-label>
+          <ion-select [(ngModel)]="expense.category.id">
+            <ion-select-option *ngFor="let c of categories" [value]="c.id">
+              {{ c.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">Beneficiary</ion-label>
+          <ion-select [(ngModel)]="expense.beneficiary.id">
+            <ion-select-option *ngFor="let b of beneficiaries" [value]="b.id">
+              {{ b.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-item>
+    <ion-label position="stacked">Date</ion-label>
+    <ion-datetime presentation="date" [(ngModel)]="expense.date"></ion-datetime>
+  </ion-item>
+
+  <ion-button expand="block" (click)="addExpense()">
+    {{ expense ? 'Save Changes' : 'Add Expense' }}
+  </ion-button>
+
+</ion-content>
