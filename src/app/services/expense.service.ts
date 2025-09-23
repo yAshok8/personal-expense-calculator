@@ -27,13 +27,10 @@ export class ExpenseDbService {
                 e.amount,
                 e.date,
                 c.id AS category_id,
-                c.name AS category_name,
-                b.id as beneficiary_id,
-                b.name AS beneficiary_name
+                c.name AS category_name
          FROM expense_item e
                 JOIN categories c ON e.category_id = c.id
-                JOIN beneficiaries b on e.beneficiary_id = b.id
-         ORDER BY e.created_date DESC LIMIT 5`
+         ORDER BY e.date DESC LIMIT 8`
       );
 
       return (result.values || []).map(row =>
@@ -119,23 +116,6 @@ export class ExpenseDbService {
       return result.values || [];
     });
   }
-
-  async getPerDayReceivedForCurrentMonth() {
-    const today = new Date();
-    const yearMonth = today.toISOString().slice(0, 7); // "YYYY-MM"
-
-    return this._dbService.executeQuery(async (db) => {
-      const result = await db.query(`
-      SELECT date, SUM(amount) AS total
-      FROM expense_item
-      WHERE strftime('%Y-%m', date) = ? AND spent = 0
-      GROUP BY date
-      ORDER BY date DESC
-    `, [yearMonth]);
-      return result.values || [];
-    });
-  }
-
 
   async saveExpense(items: Expense[]): Promise<void> {
     await this._dbService.executeQuery<any>(async (db: SQLiteDBConnection) => {

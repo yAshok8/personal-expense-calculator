@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Notes (This Month)</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Add new note -->
+  <ion-item>
+    <ion-input
+      placeholder="Write a note..."
+      [(ngModel)]="newNote"
+      clear-input="true"
+    ></ion-input>
+    <ion-button (click)="addNote()" slot="end">Add</ion-button>
+  </ion-item>
+
+  <!-- Refresh + Notes list -->
+  <ion-refresher slot="fixed" (ionRefresh)="loadNotes(); $event.target.complete()">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list *ngIf="!isLoading && notes.length > 0; else emptyState">
+    <ion-item-sliding *ngFor="let note of notes">
+      <ion-item>
+        <ion-label>
+          <h2>{{ note.name }}</h2>
+          <p>{{ note.date | date: 'mediumDate' }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteNote(note.id)">
+          Delete
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- Swipe hint -->
+  <div *ngIf="notes.length > 0" class="swipe-hint ion-text-center ion-padding">
+    <ion-text color="medium">
+      <small>💡 Tip: Swipe left on a note to delete it</small>
+    </ion-text>
+  </div>
+
+  <ng-template #emptyState>
+    <ion-text color="medium">
+      <p class="ion-padding">No notes for this month.</p>
+    </ion-text>
+  </ng-template>
+</ion-content>

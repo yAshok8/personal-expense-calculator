@@ -14,7 +14,6 @@ export class HomeComponent implements OnInit {
   protected categoryTotals: { id: number; name: string; total: number }[] = [];
   latestTransactions: Expense[] = [];
 
-
   constructor(
     private _expenseService: ExpenseDbService,
     private _categoryService: ExpenseCategoryService

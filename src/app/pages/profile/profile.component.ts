@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
-import { ExpenseCategoryService } from "../../services/expense-category.service";
-import { ExpenseDbService } from "../../services/expense.service";
-import { Capacitor } from "@capacitor/core";
-import { DbRestoreService } from "../../services/db.restore-service";
-import { ToastController } from '@ionic/angular';
-import { Share } from '@capacitor/share';
+import {Component} from '@angular/core';
+import {ExpenseCategoryService} from "../../services/expense-category.service";
+import {ExpenseDbService} from "../../services/expense.service";
+import {Capacitor} from "@capacitor/core";
+import {DbRestoreService} from "../../services/db.restore-service";
+import {ToastController} from '@ionic/angular';
+import {Share} from '@capacitor/share';
 import {Directory, Encoding, Filesystem} from "@capacitor/filesystem";
 import {ExpenseBeneficiaryService} from "../../services/beneficiary.service";
+import {NotesService} from "../../services/notes.service";
 
 @Component({
   selector: 'app-profile',
@@ -23,18 +24,21 @@ export class ProfileComponent {
     private expDBService: ExpenseDbService,
     private beneficiaryDBService: ExpenseBeneficiaryService,
     private restoreDbService: DbRestoreService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private notesDBService: NotesService
   ) {}
 
   async downloadDatabase() {
     const categories = await this.catDBService.getAllCategories();
     const beneficiaries = await this.beneficiaryDBService.fetchAllBeneficiaries();
     const expenseItems = await this.expDBService.getAllExpenseItems();
+    const notes = await this.notesDBService.fetchAllNotes();
 
     const data = {
       categories: categories || [],
       beneficiaries: beneficiaries || [],
-      expense_item: expenseItems || []
+      expense_item: expenseItems || [],
+      notes: notes || []  // ← include notes
     };
 
     const jsonString = JSON.stringify(data, null, 2);
@@ -42,7 +46,6 @@ export class ProfileComponent {
 
     if (Capacitor.isNativePlatform()) {
       try {
-        // 1️⃣ Save JSON to a temporary file in app storage
         const file = await Filesystem.writeFile({
           path: fileName,
           data: jsonString,
@@ -50,7 +53,6 @@ export class ProfileComponent {
           encoding: Encoding.UTF8
         });
 
-        // 2️⃣ Share the file via native share sheet
         await Share.share({
           title: 'Export Expense Backup',
           text: 'Here is your backup file',
@@ -61,7 +63,7 @@ export class ProfileComponent {
         console.error('Error sharing file:', err);
       }
     } else {
-      const blob = new Blob([jsonString], {type: 'application/json'});
+      const blob = new Blob([jsonString], { type: 'application/json' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

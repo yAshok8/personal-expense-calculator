@@ -9,9 +9,21 @@ export const createSchemaExpenseCategory: string = `
   );
 `;
 
+export const createNotesTable: string = `
+      CREATE TABLE IF NOT EXISTS notes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      date TEXT NOT NULL,
+      name TEXT NOT NULL,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+`;
+
+
 export const createSchemaExpenseBeneficiary: string = `
   CREATE TABLE IF NOT EXISTS beneficiaries (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT,
     name TEXT UNIQUE NOT NULL
   );
 `;
@@ -25,8 +37,8 @@ export const createSchemaExpenseItem: string = `
     category_id INTEGER NOT NULL,
     beneficiary_id INTEGER NOT NULL,
     spent INTEGER NOT NULL DEFAULT 1,
-    created_date TEXT DEFAULT (datetime('now')),
-    updated_date TEXT DEFAULT (datetime('now')),
+    created_date TEXT,
+    updated_date TEXT,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE ON UPDATE CASCADE
     FOREIGN KEY (beneficiary_id) REFERENCES beneficiaries(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
@@ -60,6 +72,7 @@ export class MigrationService {
     await this.createExpenseBeneficiary();
     // await this.insertDefaultBeneficiaries();
     await this.createExpenseItem();
+    await this.createNotesTable();
   }
 
   async createExpenseItem(): Promise<any> {
@@ -77,6 +90,12 @@ export class MigrationService {
   async createExpenseBeneficiary(): Promise<any> {
     await this.databaseService.executeQuery(async (db) => {
       await db.execute(createSchemaExpenseBeneficiary);
+    });
+  }
+
+  async createNotesTable(): Promise<any> {
+    await this.databaseService.executeQuery(async (db) => {
+      await db.execute(createNotesTable);
     });
   }
 

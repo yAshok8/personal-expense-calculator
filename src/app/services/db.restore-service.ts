@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
 import {DatabaseService} from "./database.service";
-import {SQLiteDBConnection} from "@capacitor-community/sqlite";
-import {Expense} from "../models/expense";
 
 @Injectable({
   providedIn: 'root',
@@ -25,19 +23,25 @@ export class DbRestoreService {
       created_date: string;
       updated_date: string;
     }[];
+    notes: {
+      id: number;
+      date: string;
+      name: string;
+      created_at: string;
+      updated_at: string;
+    }[];
   }): Promise<void> {
-    console.log(jsonData);
     await this._dbService.executeQuery(async (db) => {
-      // 1️⃣ Clear old data
       await db.execute('DELETE FROM expense_item');
       await db.execute('DELETE FROM categories');
+      await db.execute('DELETE FROM beneficiaries');
+      await db.execute('DELETE FROM notes');
 
-      // 2️⃣ Reset AUTOINCREMENT counters
       await db.execute(`DELETE FROM sqlite_sequence WHERE name='categories'`);
       await db.execute(`DELETE FROM sqlite_sequence WHERE name='beneficiaries'`);
       await db.execute(`DELETE FROM sqlite_sequence WHERE name='expense_item'`);
+      await db.execute(`DELETE FROM sqlite_sequence WHERE name='notes'`);
 
-      // 3️⃣ Insert all categories with original IDs
       for (const cat of jsonData.categories) {
         await db.run(
           `INSERT INTO categories (id, name) VALUES (?, ?)`,
@@ -45,19 +49,17 @@ export class DbRestoreService {
         );
       }
 
-      for (const cat of jsonData.beneficiaries) {
+      for (const ben of jsonData.beneficiaries) {
         await db.run(
           `INSERT INTO beneficiaries (id, name) VALUES (?, ?)`,
-          [cat.id, cat.name]
+          [ben.id, ben.name]
         );
       }
 
-      // 4️⃣ Insert all expense items with original IDs and timestamps
       for (const item of jsonData.expense_item) {
-        console.log(item);
         await db.run(
           `INSERT INTO expense_item (id, date, item_name, amount, category_id, beneficiary_id, spent, created_date, updated_date)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             item.id,
             item.date,
@@ -71,10 +73,17 @@ export class DbRestoreService {
           ]
         );
       }
+
+      for (const note of jsonData.notes) {
+        await db.run(
+          `INSERT INTO notes (id, date, name, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?)`,
+          [note.id, note.date, note.name, note.created_at, note.updated_at]
+        );
+      }
     });
 
     console.log('Database restored successfully!');
   }
-
 
 }
