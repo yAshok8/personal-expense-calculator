@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ExpenseDbService} from "../../services/expense.service";
 import {ExpenseCategoryService} from "../../services/expense-category.service";
 import {Expense} from "../../models/expense";
+import {MenuController} from "@ionic/angular";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -16,8 +18,13 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private _expenseService: ExpenseDbService,
-    private _categoryService: ExpenseCategoryService
+    private _categoryService: ExpenseCategoryService,
+    private menu: MenuController
   ) {}
+
+  openSidebar() {
+    this.menu.open('sidebarMenu');
+  }
 
   async ngOnInit(): Promise<void> {
     console.log('ngOnInit of HomeComponent');

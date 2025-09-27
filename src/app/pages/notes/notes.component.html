@@ -1,6 +1,11 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Notes (This Month)</ion-title>
+    <ion-title>Notes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openSidebar()">
+        <ion-icon slot="icon-only" name="menu"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -22,7 +27,7 @@
 
   <ion-list *ngIf="!isLoading && notes.length > 0; else emptyState">
     <ion-item-sliding *ngFor="let note of notes">
-      <ion-item>
+      <ion-item (click)="openNotePopover(note)">
         <ion-label>
           <h2>{{ note.name }}</h2>
           <p>{{ note.date | date: 'mediumDate' }}</p>

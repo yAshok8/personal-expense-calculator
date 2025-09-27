@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
 import {NotesService} from "../../services/notes.service";
-import {ToastController} from "@ionic/angular";
+import {MenuController, ToastController} from "@ionic/angular";
+import {NotePopoverComponent} from "./note-popover.component";
+import { PopoverController } from '@ionic/angular';
 
 @Component({
   selector: 'app-notes',
@@ -15,11 +17,17 @@ export class NotesComponent {
 
   constructor(
     private notesService: NotesService,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private popoverCtrl: PopoverController,
+    private menu: MenuController
   ) {}
 
   async ngOnInit() {
     await this.loadNotes();
+  }
+
+  openSidebar() {
+    this.menu.open('sidebarMenu');
   }
 
   async loadNotes() {
@@ -40,7 +48,8 @@ export class NotesComponent {
     }
 
     try {
-      await this.notesService.addNoteForDate(new Date().toISOString().split('T')[0], this.newNote.trim());
+      await this.notesService
+        .addNoteForDate(new Date().toISOString().split('T')[0], this.newNote.trim());
       this.newNote = '';
       await this.loadNotes();
 
@@ -81,4 +90,13 @@ export class NotesComponent {
     }
   }
 
+  async openNotePopover(note: any) {
+    const popover = await this.popoverCtrl.create({
+      component: NotePopoverComponent,
+      componentProps: { note },
+      translucent: true,
+      cssClass: 'note-popover-class'
+    });
+    await popover.present();
+  }
 }

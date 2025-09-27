@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>{{ expense ? 'Edit Expense' : 'Add Expense' }}</ion-title>
+    <ion-title>{{ expense.itemName ? 'Edit Expense' : 'Add Expense' }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">Close</ion-button>
     </ion-buttons>

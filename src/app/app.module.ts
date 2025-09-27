@@ -15,6 +15,7 @@ import {FormsModule} from "@angular/forms";
 import {TabsPageModule} from "./pages/tabs/tabs.module";
 import { ProfileComponent } from './pages/profile/profile.component';
 import {NgChartsModule} from "ng2-charts";
+import {SidebarPageModule} from "./pages/sidebar/sidebar.module";
 
 
 export function initializeFactory(init: InitializeAppService) {
@@ -24,12 +25,13 @@ export function initializeFactory(init: InitializeAppService) {
 @NgModule({
     declarations: [AppComponent, ProfileComponent],
     imports: [
-      BrowserModule,
-      IonicModule.forRoot(),
-      AppRoutingModule,
-      FormsModule,
-      TabsPageModule,
-      NgChartsModule
+        BrowserModule,
+        IonicModule.forRoot(),
+        AppRoutingModule,
+        FormsModule,
+        TabsPageModule,
+        NgChartsModule,
+        SidebarPageModule
     ],
     providers: [
         SQLiteService,

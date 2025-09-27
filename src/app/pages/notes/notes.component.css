@@ -2,3 +2,15 @@
   font-style: italic;
   opacity: 0.7;
 }
+
+:host {
+  display: block;
+}
+
+/* target the host popover container */
+::ng-deep .note-popover-class {
+  --width: 90%;
+  --min-width: 280px;
+  --max-width: 90%;
+  --height: auto;
+}

@@ -14,7 +14,6 @@ export class NotesService {
       const result = await db.query(
         `SELECT *
          FROM notes
-         WHERE strftime('%Y-%m', date) = strftime('%Y-%m', 'now')
          ORDER BY date DESC`
       );
       return result.values || [];
