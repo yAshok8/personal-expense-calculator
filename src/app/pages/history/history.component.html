@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Expense History</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let exp of expenses" lines="inset">
+      <ion-label>
+        <h2>
+          {{ exp.item_name }}
+        </h2>
+        <p>
+          {{ exp.date | date:'MMM d, y' }} •
+          <strong>{{ exp.category_name }}</strong> •
+          {{ exp.beneficiary_name }}
+        </p>
+      </ion-label>
+
+      <!-- Amount -->
+      <ion-note slot="end" [ngClass]="exp.spent === 1 ? 'negative' : 'positive'">
+        {{ exp.spent === 1 ? '- ' : '+ ' }}{{ exp.amount | currency }}
+      </ion-note>
+    </ion-item>
+  </ion-list>
+
+  <!-- Infinite Scroll -->
+  <ion-infinite-scroll
+    threshold="100px"
+    (ionInfinite)="loadMore($event)"
+    [disabled]="!hasMore">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more expenses...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

@@ -1,0 +1,26 @@
+ion-item h2 {
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+ion-item p {
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  margin-top: 2px;
+}
+
+ion-note {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.negative {
+  color: var(--ion-color-danger); /* red */
+}
+
+.positive {
+  color: var(--ion-color-success); /* green */
+}

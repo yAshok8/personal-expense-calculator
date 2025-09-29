@@ -11,6 +11,31 @@ export class ExpenseDbService {
   constructor(private _dbService: DatabaseService) {
   }
 
+  async getExpenseItemsPaginated(page: number, pageSize: number = 10): Promise<any[]> {
+    const offset = (page - 1) * pageSize;
+
+    return this._dbService.executeQuery(async (db) => {
+      const query = `
+        SELECT e.id, e.date, e.item_name, e.amount, e.spent,
+               c.name as category_name,
+               b.name as beneficiary_name
+        FROM expense_item e
+               JOIN categories c ON e.category_id = c.id
+               JOIN beneficiaries b ON e.beneficiary_id = b.id
+        ORDER BY e.date DESC, e.id DESC
+          LIMIT ? OFFSET ?
+      `;
+      const result = await db.query(query, [pageSize, offset]);
+      return result.values || [];
+    });
+  }
+
+  async getTotalExpenseCount(): Promise<number> {
+    return this._dbService.executeQuery(async (db) => {
+      const result = await db.query(`SELECT COUNT(*) as count FROM expense_item`);
+      return result.values?.[0]?.count || 0;
+    });
+  }
 
   async getAllExpenseItems(): Promise<any[]> {
     return this._dbService.executeQuery(async (db) => {

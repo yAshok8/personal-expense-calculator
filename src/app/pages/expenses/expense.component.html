@@ -56,6 +56,12 @@
     </ion-card-content>
   </ion-card>
 
+  <div *ngIf="expenseDates.length > 0" class="swipe-hint ion-padding">
+    <ion-text color="medium">
+      <small>💡 Tap to open and edit expenses.</small>
+    </ion-text>
+  </div>
+
   <ion-card *ngFor="let item of expenseDates" (click)="openItems(item.date)">
     <ion-row class="ion-align-items-center ion-padding-vertical">
       <ion-col size="8">
