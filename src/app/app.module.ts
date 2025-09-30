@@ -17,7 +17,6 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import {NgChartsModule} from "ng2-charts";
 import {SidebarPageModule} from "./pages/sidebar/sidebar.module";
 
-
 export function initializeFactory(init: InitializeAppService) {
   return () => init.initializeApp();
 }

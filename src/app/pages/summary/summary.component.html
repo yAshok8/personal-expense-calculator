@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <!-- Back button -->
+    <ion-buttons slot="start">
+      <ion-button (click)="confirmBack()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Monthly Expense Summary</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Month Selector -->
+  <ion-item>
+    <ion-select
+      aria-label="month"
+      placeholder="Select the month"
+      [(ngModel)]="selectedMonth"
+      (ionChange)="loadSummary()"
+    >
+      <ion-select-option *ngFor="let m of months" [value]="m">
+        {{ m | date:'MMMM yyyy' }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <!-- Totals -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Totals</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Total Spent: {{ totalSpent | currency:'INR' }}</p>
+      <p>Total Received: {{ totalReceived | currency:'INR' }}</p>
+      <p>Final Expense: {{ finalExpense | currency:'INR' }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Highlights -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Highlights</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Top Category: {{ topCategory }}</p>
+      <p>Top Beneficiary: {{ topBeneficiary }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Charts -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Expenses by Category</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #categoryChartCanvas></canvas>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Expenses by Beneficiary</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #beneficiaryChartCanvas></canvas>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
 import {NotesService} from "../../services/notes.service";
-import {MenuController, ToastController} from "@ionic/angular";
+import {MenuController, PopoverController, ToastController} from "@ionic/angular";
 import {NotePopoverComponent} from "./note-popover.component";
-import { PopoverController } from '@ionic/angular';
 
 @Component({
   selector: 'app-notes',
@@ -24,10 +23,6 @@ export class NotesComponent {
 
   async ngOnInit() {
     await this.loadNotes();
-  }
-
-  openSidebar() {
-    this.menu.open('sidebarMenu');
   }
 
   async loadNotes() {

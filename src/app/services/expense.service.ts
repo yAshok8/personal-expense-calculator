@@ -11,6 +11,126 @@ export class ExpenseDbService {
   constructor(private _dbService: DatabaseService) {
   }
 
+  async getDateRange(): Promise<{ minDate: string, maxDate: string }> {
+    return this._dbService.executeQuery(async (db) => {
+      const query = `
+      SELECT MIN(date) as minDate, MAX(date) as maxDate
+      FROM expense_item
+    `;
+      const result = await db.query(query);
+
+      if (result.values && result.values.length > 0) {
+        return {
+          minDate: result.values[0].minDate,
+          maxDate: result.values[0].maxDate
+        };
+      }
+
+      // If no data, fallback to current date
+      const now = new Date().toISOString().slice(0, 10);
+      return { minDate: now, maxDate: now };
+    });
+  }
+
+
+  async getTotalSpent(year: string, month: string): Promise<number> {
+    return this._dbService.executeQuery(async (db) => {
+      const query = `
+      SELECT IFNULL(SUM(amount), 0) as total
+      FROM expense_item
+      WHERE spent = 1
+        AND strftime('%Y', date) = ?
+        AND strftime('%m', date) = ?
+    `;
+      const result = await db.query(query, [year, month]);
+      return result.values?.[0]?.total || 0;
+    });
+  }
+
+  async getTotalReceived(year: string, month: string): Promise<number> {
+    return this._dbService.executeQuery(async (db) => {
+      const query = `
+      SELECT IFNULL(SUM(amount), 0) as total
+      FROM expense_item
+      WHERE spent = 0
+        AND strftime('%Y', date) = ?
+        AND strftime('%m', date) = ?
+    `;
+      const result = await db.query(query, [year, month]);
+      return result.values?.[0]?.total || 0;
+    });
+  }
+
+  async getTopCategory(year: string, month: string): Promise<string> {
+    return this._dbService.executeQuery(async (db) => {
+      const query = `
+      SELECT c.name as category, SUM(e.amount) as total
+      FROM expense_item e
+      JOIN categories c ON e.category_id = c.id
+      WHERE e.spent = 1
+        AND strftime('%Y', e.date) = ?
+        AND strftime('%m', e.date) = ?
+      GROUP BY c.name
+      ORDER BY total DESC
+      LIMIT 1
+    `;
+      const result = await db.query(query, [year, month]);
+      return result.values?.[0]?.category || 'N/A';
+    });
+  }
+
+  async getTopBeneficiary(year: string, month: string): Promise<string> {
+    return this._dbService.executeQuery(async (db) => {
+      const query = `
+      SELECT b.name as beneficiary, SUM(e.amount) as total
+      FROM expense_item e
+      JOIN beneficiaries b ON e.beneficiary_id = b.id
+      WHERE e.spent = 1
+        AND strftime('%Y', e.date) = ?
+        AND strftime('%m', e.date) = ?
+      GROUP BY b.name
+      ORDER BY total DESC
+      LIMIT 1
+    `;
+      const result = await db.query(query, [year, month]);
+      return result.values?.[0]?.beneficiary || 'N/A';
+    });
+  }
+
+  async getCategoryBreakdown(year: string, month: string): Promise<any[]> {
+    return this._dbService.executeQuery(async (db) => {
+      const query = `
+      SELECT c.name as category, SUM(e.amount) as total
+      FROM expense_item e
+      JOIN categories c ON e.category_id = c.id
+      WHERE e.spent = 1
+        AND strftime('%Y', e.date) = ?
+        AND strftime('%m', e.date) = ?
+      GROUP BY c.name
+      ORDER BY total DESC
+    `;
+      const result = await db.query(query, [year, month]);
+      return result.values || [];
+    });
+  }
+
+  async getBeneficiaryBreakdown(year: string, month: string): Promise<any[]> {
+    return this._dbService.executeQuery(async (db) => {
+      const query = `
+      SELECT b.name as beneficiary, SUM(e.amount) as total
+      FROM expense_item e
+      JOIN beneficiaries b ON e.beneficiary_id = b.id
+      WHERE e.spent = 1
+        AND strftime('%Y', e.date) = ?
+        AND strftime('%m', e.date) = ?
+      GROUP BY b.name
+      ORDER BY total DESC
+    `;
+      const result = await db.query(query, [year, month]);
+      return result.values || [];
+    });
+  }
+
   async getExpenseItemsPaginated(page: number, pageSize: number = 10): Promise<any[]> {
     const offset = (page - 1) * pageSize;
 

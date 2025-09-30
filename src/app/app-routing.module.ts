@@ -1,6 +1,7 @@
   import { NgModule } from '@angular/core';
   import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
   import {SidebarPage} from "./pages/sidebar/sidebar.component";
+  import {SummaryComponent} from "./pages/summary/summary.component";
 
   const routes: Routes = [
     {
@@ -12,10 +13,9 @@
       path: 'tabs',
       loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule)
     },
-    // {
-    //   path: 'sidebar',
-    //   loadChildren: () => import('./pages/sidebar/sidebar.module').then(m => m.SidebarPageModule)
-    // },
+    { path: 'summary',
+      component: SummaryComponent
+    }
   ];
 
   @NgModule({
