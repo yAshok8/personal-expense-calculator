@@ -1,18 +1,16 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule} from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { Chart, registerables } from 'chart.js';
 import { ExpenseDbService } from '../../services/expense.service';
-
-Chart.register(...registerables);
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-summary',
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule],
   templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.css']
+  styleUrls: ['./summary.component.scss']
 })
 export class SummaryComponent implements OnInit {
 
@@ -22,95 +20,63 @@ export class SummaryComponent implements OnInit {
   finalExpense = 0;
   topCategory = '';
   topBeneficiary = '';
-  categoryChart: any;
-  beneficiaryChart: any;
   months: Date[] = [];
 
-  @ViewChild('categoryChartCanvas', { static: false }) categoryChartCanvas!: ElementRef;
-
-  @ViewChild('beneficiaryChartCanvas', { static: false }) beneficiaryChartCanvas!: ElementRef;
-
-  constructor(private expenseDb: ExpenseDbService) {}
+  constructor(
+    private expenseDb: ExpenseDbService,
+    private router: Router
+  ) {}
 
   async ngOnInit() {
     const { minDate, maxDate } = await this.expenseDb.getDateRange();
+    this.buildMonths(new Date(minDate), new Date(maxDate));
+    this.selectedMonth = this.months[0];
+    await this.loadSummary();
+  }
 
-    const min = new Date(minDate);
-    const max = new Date(maxDate);
+  confirmBack() {
+    this.router.navigate(['/tabs/home']);
+  }
 
+  private buildMonths(min: Date, max: Date) {
     this.months = [];
     let d = new Date(max.getFullYear(), max.getMonth(), 1);
+    const minStart = new Date(min.getFullYear(), min.getMonth(), 1);
 
-    while (d >= new Date(min.getFullYear(), min.getMonth(), 1)) {
+    while (d >= minStart) {
       this.months.push(new Date(d));
-      d.setMonth(d.getMonth() - 1); // step back one month
+      d.setMonth(d.getMonth() - 1);
     }
-
-    // Default = latest available month
-    this.selectedMonth = new Date(max.getFullYear(), max.getMonth(), 1);
-
-    this.loadSummary();
-  }
-  async confirmBack() {
-    console.log('back btn pressed');
   }
 
   async loadSummary() {
     const year = this.selectedMonth.getFullYear().toString();
     const month = (this.selectedMonth.getMonth() + 1).toString().padStart(2, '0');
 
-    this.totalSpent = await this.expenseDb.getTotalSpent(year, month);
-    this.totalReceived = await this.expenseDb.getTotalReceived(year, month);
+    // fetch in parallel
+    const [
+      spent,
+      received,
+      category,
+      beneficiary
+    ] = await Promise.all([
+      this.expenseDb.getTotalSpent(year, month),
+      this.expenseDb.getTotalReceived(year, month),
+      this.expenseDb.getTopCategory(year, month),
+      this.expenseDb.getTopBeneficiary(year, month)
+    ]);
+
+    this.totalSpent = spent || 0;
+    this.totalReceived = received || 0;
     this.finalExpense = this.totalSpent - this.totalReceived;
 
-    this.topCategory = await this.expenseDb.getTopCategory(year, month);
-    this.topBeneficiary = await this.expenseDb.getTopBeneficiary(year, month);
+    this.topCategory = category
+      ? `${category.name} - ${Number(category.total).toFixed(2)} SR`
+      : 'N/A';
 
-    const categoryData = await this.expenseDb.getCategoryBreakdown(year, month);
-    const beneficiaryData = await this.expenseDb.getBeneficiaryBreakdown(year, month);
+    this.topBeneficiary = beneficiary
+      ? `${beneficiary.name} - ${Number(beneficiary.total).toFixed(2)} SR`
+      : 'N/A';
 
-    this.renderCategoryChart(categoryData);
-    this.renderBeneficiaryChart(beneficiaryData);
-  }
-
-  renderCategoryChart(data: any[]) {
-    if (this.categoryChart) this.categoryChart.destroy();
-
-    this.categoryChart = new Chart(this.categoryChartCanvas.nativeElement, {
-      type: 'pie',
-      data: {
-        labels: data.map(d => d.category),
-        datasets: [
-          {
-            data: data.map(d => d.total),
-            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8BC34A', '#FF9800']
-          }
-        ]
-      }
-    });
-  }
-
-  renderBeneficiaryChart(data: any[]) {
-    if (this.beneficiaryChart) this.beneficiaryChart.destroy();
-
-    this.beneficiaryChart = new Chart(this.beneficiaryChartCanvas.nativeElement, {
-      type: 'bar',
-      data: {
-        labels: data.map(d => d.beneficiary),
-        datasets: [
-          {
-            label: 'Amount Spent',
-            data: data.map(d => d.total),
-            backgroundColor: '#42A5F5'
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false }
-        }
-      }
-    });
   }
 }

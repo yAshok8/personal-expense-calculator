@@ -61,73 +61,53 @@ export class ExpenseDbService {
     });
   }
 
-  async getTopCategory(year: string, month: string): Promise<string> {
+  async getTopCategory(year: string, month: string): Promise<{ name: string, total: number } | null> {
     return this._dbService.executeQuery(async (db) => {
       const query = `
-      SELECT c.name as category, SUM(e.amount) as total
-      FROM expense_item e
-      JOIN categories c ON e.category_id = c.id
-      WHERE e.spent = 1
-        AND strftime('%Y', e.date) = ?
-        AND strftime('%m', e.date) = ?
-      GROUP BY c.name
-      ORDER BY total DESC
-      LIMIT 1
-    `;
+        SELECT c.name AS category, SUM(e.amount) AS total
+        FROM expense_item e
+               JOIN categories c ON e.category_id = c.id
+        WHERE e.spent = 1
+          AND strftime('%Y', e.date) = ?
+          AND strftime('%m', e.date) = ?
+        GROUP BY c.name
+        ORDER BY total DESC
+          LIMIT 1
+      `;
       const result = await db.query(query, [year, month]);
-      return result.values?.[0]?.category || 'N/A';
+      if (result.values && result.values.length > 0) {
+        return {
+          name: result.values[0].category,
+          total: result.values[0].total
+        };
+      }
+      return null;
     });
   }
 
-  async getTopBeneficiary(year: string, month: string): Promise<string> {
+  async getTopBeneficiary(year: string, month: string): Promise<{ name: string, total: number } | null> {
     return this._dbService.executeQuery(async (db) => {
       const query = `
-      SELECT b.name as beneficiary, SUM(e.amount) as total
-      FROM expense_item e
-      JOIN beneficiaries b ON e.beneficiary_id = b.id
-      WHERE e.spent = 1
-        AND strftime('%Y', e.date) = ?
-        AND strftime('%m', e.date) = ?
-      GROUP BY b.name
-      ORDER BY total DESC
-      LIMIT 1
-    `;
+        SELECT b.name AS beneficiary, SUM(e.amount) AS total
+        FROM expense_item e
+               JOIN beneficiaries b ON e.beneficiary_id = b.id
+        WHERE e.spent = 1
+          AND strftime('%Y', e.date) = ?
+          AND strftime('%m', e.date) = ?
+        GROUP BY b.name
+        ORDER BY total DESC
+          LIMIT 1
+      `;
       const result = await db.query(query, [year, month]);
-      return result.values?.[0]?.beneficiary || 'N/A';
-    });
-  }
 
-  async getCategoryBreakdown(year: string, month: string): Promise<any[]> {
-    return this._dbService.executeQuery(async (db) => {
-      const query = `
-      SELECT c.name as category, SUM(e.amount) as total
-      FROM expense_item e
-      JOIN categories c ON e.category_id = c.id
-      WHERE e.spent = 1
-        AND strftime('%Y', e.date) = ?
-        AND strftime('%m', e.date) = ?
-      GROUP BY c.name
-      ORDER BY total DESC
-    `;
-      const result = await db.query(query, [year, month]);
-      return result.values || [];
-    });
-  }
+      if (result.values && result.values.length > 0) {
+        return {
+          name: result.values[0].beneficiary,
+          total: result.values[0].total
+        };
+      }
 
-  async getBeneficiaryBreakdown(year: string, month: string): Promise<any[]> {
-    return this._dbService.executeQuery(async (db) => {
-      const query = `
-      SELECT b.name as beneficiary, SUM(e.amount) as total
-      FROM expense_item e
-      JOIN beneficiaries b ON e.beneficiary_id = b.id
-      WHERE e.spent = 1
-        AND strftime('%Y', e.date) = ?
-        AND strftime('%m', e.date) = ?
-      GROUP BY b.name
-      ORDER BY total DESC
-    `;
-      const result = await db.query(query, [year, month]);
-      return result.values || [];
+      return null;
     });
   }
 

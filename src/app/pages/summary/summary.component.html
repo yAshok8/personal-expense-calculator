@@ -1,70 +1,69 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <!-- Back button -->
-    <ion-buttons slot="start">
+    <ion-title>Summary</ion-title>
+    <ion-buttons slot="end">
       <ion-button (click)="confirmBack()">
-        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+        <ion-icon name="home-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-
-    <ion-title>Monthly Expense Summary</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <!-- Month Selector -->
-  <ion-item>
-    <ion-select
-      aria-label="month"
-      placeholder="Select the month"
-      [(ngModel)]="selectedMonth"
-      (ionChange)="loadSummary()"
-    >
-      <ion-select-option *ngFor="let m of months" [value]="m">
-        {{ m | date:'MMMM yyyy' }}
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
 
-  <!-- Totals -->
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Totals</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p>Total Spent: {{ totalSpent | currency:'INR' }}</p>
-      <p>Total Received: {{ totalReceived | currency:'INR' }}</p>
-      <p>Final Expense: {{ finalExpense | currency:'INR' }}</p>
-    </ion-card-content>
-  </ion-card>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="8">
+        <ion-item>
+          <ion-select
+            aria-label="month"
+            placeholder="Select Month"
+            [(ngModel)]="selectedMonth"
+            (ionChange)="loadSummary()"
+            interface="popover"
+          >
+            <ion-select-option *ngFor="let m of months" [value]="m">
+              {{ m | date:'MMMM yyyy' }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-  <!-- Highlights -->
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Highlights</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p>Top Category: {{ topCategory }}</p>
-      <p>Top Beneficiary: {{ topBeneficiary }}</p>
-    </ion-card-content>
-  </ion-card>
 
-  <!-- Charts -->
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Expenses by Category</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <canvas #categoryChartCanvas></canvas>
-    </ion-card-content>
-  </ion-card>
+  <!-- Summary Card -->
+  <ion-card class="summary-card ion-text-center">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6" class="border-right">
+          <h2 class="title">Spent</h2>
+          <h3 class="spent">{{ totalSpent | number:'1.2-2' }} SR</h3>
+        </ion-col>
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Expenses by Beneficiary</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <canvas #beneficiaryChartCanvas></canvas>
-    </ion-card-content>
+        <ion-col size="6">
+          <h2 class="title">Received</h2>
+          <h3 class="received">{{ totalReceived | number:'1.2-2' }} SR</h3>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" class="border-top">
+          <h3 class="title final-label">Final Expense</h3>
+          <h1 class="final">{{ finalExpense | number:'1.2-2' }} SR</h1>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="border-top">
+        <ion-col size="6" class="border-right">
+          <h4>Top Beneficiary</h4>
+          <p>{{ topBeneficiary || 'N/A' }}</p>
+        </ion-col>
+        <ion-col size="6">
+          <h4>Top Category</h4>
+          <p>{{ topCategory || 'N/A' }}</p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-card>
 </ion-content>

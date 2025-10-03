@@ -11,80 +11,91 @@
 
 <ion-content class="ion-padding">
 
-  <!-- Monthly Summary -->
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">📊 This Month</ion-card-title>
-    </ion-card-header>
+  <ng-container *ngIf="expenseDates && expenseDates.length > 0; else noExpenses">
 
-    <ion-card-content>
-      <ion-grid>
-        <ion-row class="ion-text-center ion-padding-vertical">
-          <ion-col size="6">
-            <h3 class="text-red ion-no-margin">
-              <ion-icon name="arrow-up" color="danger"></ion-icon> Spent
-            </h3>
-            <p class="amount-red">
-              SAR {{ monthlyTotalSpent | number:'1.2-2' }}
-            </p>
-          </ion-col>
-          <ion-col size="6">
-            <h3 class="text-green ion-no-margin">
-              <ion-icon name="arrow-down" color="success"></ion-icon> Received
-            </h3>
-            <p class="amount-green">
-              SAR {{ monthlyTotalReceived | number:'1.2-2' }}
-            </p>
-          </ion-col>
-        </ion-row>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">📊 This Month</ion-card-title>
+      </ion-card-header>
 
-        <ion-row class="ion-text-center ion-padding-top-sm" *ngIf="averageExpensePerDay">
-          <ion-col>
-            <h4 class="ion-no-margin">💡 Avg. per Day</h4>
-            <p class="amount-gray">SAR {{ averageExpensePerDay | number:'1.2-2' }}</p>
-          </ion-col>
-        </ion-row>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="ion-text-center ion-padding-vertical">
+            <ion-col size="6">
+              <h3 class="text-red ion-no-margin">
+                <ion-icon name="arrow-up" color="danger"></ion-icon> Spent
+              </h3>
+              <p class="amount-red">
+                SAR {{ monthlyTotalSpent | number:'1.2-2' }}
+              </p>
+            </ion-col>
+            <ion-col size="6">
+              <h3 class="text-green ion-no-margin">
+                <ion-icon name="arrow-down" color="success"></ion-icon> Received
+              </h3>
+              <p class="amount-green">
+                SAR {{ monthlyTotalReceived | number:'1.2-2' }}
+              </p>
+            </ion-col>
+          </ion-row>
 
-        <ion-row class="ion-text-center ion-padding-top-sm">
-          <ion-col>
-            <p class="days-text">
-              🗓️ {{ totalDays }} expense days this month
-            </p>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
+          <ion-row class="ion-text-center ion-padding-top-sm" *ngIf="averageExpensePerDay">
+            <ion-col>
+              <h4 class="ion-no-margin">💡 Avg. per Day</h4>
+              <p class="amount-gray">SAR {{ averageExpensePerDay | number:'1.2-2' }}</p>
+            </ion-col>
+          </ion-row>
 
-  <div *ngIf="expenseDates.length > 0" class="swipe-hint ion-padding">
-    <ion-text color="medium">
-      <small>💡 Tap to open and edit expenses.</small>
-    </ion-text>
-  </div>
+          <ion-row class="ion-text-center ion-padding-top-sm">
+            <ion-col>
+              <p class="days-text">
+                🗓️ {{ totalDays }} expense days this month
+              </p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
 
-  <ion-card *ngFor="let item of expenseDates" (click)="openItems(item.date)">
-    <ion-row class="ion-align-items-center ion-padding-vertical">
-      <ion-col size="8">
-        <h3 class="ion-no-margin">
-          {{ item.date | date:'EEE, MMM d' }}
-        </h3>
-        <div class="totals">
-          <span class="spent" *ngIf="item.spent">
-            <ion-icon name="arrow-up" color="danger"></ion-icon>
-            {{ item.spent | number:'1.2-2' }} SAR
-          </span>
-          <span class="received" *ngIf="item.received">
-            <ion-icon name="arrow-down" color="success"></ion-icon>
-            {{ item.received | number:'1.2-2' }} SAR
-          </span>
-        </div>
-      </ion-col>
-      <ion-col size="4" class="ion-text-right">
-        <ion-badge [color]="item.spent > 100 ? 'danger' : 'success'" mode="ios">
-          {{ item.spent > 100 ? 'High' : 'Low' }}
-        </ion-badge>
-      </ion-col>
-    </ion-row>
-  </ion-card>
+    <div class="swipe-hint ion-padding">
+      <ion-text color="medium">
+        <small>💡 Tap to open and edit expenses.</small>
+      </ion-text>
+    </div>
+
+    <ion-card *ngFor="let item of expenseDates" (click)="openItems(item.date)">
+      <ion-row class="ion-align-items-center ion-padding-vertical">
+        <ion-col size="8">
+          <h3 class="ion-no-margin">
+            {{ item.date | date:'EEE, MMM d' }}
+          </h3>
+          <div class="totals">
+            <span class="spent" *ngIf="item.spent">
+              <ion-icon name="arrow-up" color="danger"></ion-icon>
+              {{ item.spent | number:'1.2-2' }} SAR
+            </span>
+            <span class="received" *ngIf="item.received">
+              <ion-icon name="arrow-down" color="success"></ion-icon>
+              {{ item.received | number:'1.2-2' }} SAR
+            </span>
+          </div>
+        </ion-col>
+        <ion-col size="4" class="ion-text-right">
+          <ion-badge [color]="item.spent > 100 ? 'danger' : 'success'" mode="ios">
+            {{ item.spent > 100 ? 'High' : 'Low' }}
+          </ion-badge>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ng-container>
+
+  <ng-template #noExpenses>
+    <ion-card class="ion-text-center">
+      <ion-card-content>
+        <ion-icon name="wallet-outline" size="large" color="medium"></ion-icon>
+        <h2>No expenses for this month yet</h2>
+      </ion-card-content>
+    </ion-card>
+  </ng-template>
 
 </ion-content>

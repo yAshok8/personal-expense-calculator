@@ -51,7 +51,7 @@ export class ExpenseCategoryService {
         SELECT c.id, c.name, IFNULL(SUM(e.amount), 0) AS total
         FROM categories c
                LEFT JOIN expense_item e
-                         ON e.category_id = c.id AND e.date LIKE ?
+                         ON e.category_id = c.id AND e.date LIKE ? and e.spent = 1
         GROUP BY c.id, c.name
         HAVING total > 0
         ORDER BY total DESC
