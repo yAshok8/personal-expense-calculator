@@ -59,6 +59,8 @@ export class ExpenseComponent implements OnInit {
     if (!this.expenseDates.length) return 0;
     const totalSpent = this.expenseDates
       .reduce((sum, d) => sum + (d.spent || 0), 0);
-    return totalSpent / this.expenseDates.length;
+    const dayNumber = new Date().getDate();
+    return totalSpent / dayNumber;
   }
+
 }
