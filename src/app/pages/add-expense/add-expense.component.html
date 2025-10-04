@@ -19,34 +19,76 @@
 
 <ion-content class="ion-padding">
 
+  <!-- 💰 Total Summary Row -->
+  <ion-card *ngIf="expenses.length > 0" class="summary-card ion-margin-bottom">
+    <ion-grid>
+      <ion-row class="ion-align-items-center ion-justify-content-around">
+
+        <!-- 🔺 Spent -->
+        <ion-col size="6" class="ion-text-center summary-col">
+          <ion-icon
+            name="chevron-up-outline"
+            color="danger"
+            class="summary-icon">
+          </ion-icon>
+          <ion-text color="danger" class="summary-text">
+            <span class="summary-amount">
+            {{ getTotalSpent() | number:'1.2-2' }} SAR
+          </span>
+          </ion-text>
+        </ion-col>
+
+        <!-- 🔻 Received -->
+        <ion-col size="6" class="ion-text-center summary-col">
+          <ion-icon
+            name="chevron-down-outline"
+            color="success"
+            class="summary-icon">
+          </ion-icon>
+          <ion-text color="success" class="summary-text">
+            <span class="summary-amount">
+            {{ getTotalReceived() | number:'1.2-2' }} SAR
+          </span>
+          </ion-text>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
+  <!-- 🧾 Expense List -->
   <ion-list *ngIf="expenses.length > 0; else noData">
     <ion-item
       *ngFor="let exp of expenses; let i = index"
       [ngClass]="exp.spent ? 'spent-item' : 'received-item'">
 
       <ion-label>
-        <h2>{{ exp.itemName }}</h2>
+        <h2>{{ exp.itemName }} for {{ exp.beneficiary.name }}</h2>
         <p>{{ exp.amount }} SAR | {{ exp.category.name }} | {{ exp.getFormattedDate() }}</p>
         <p [ngClass]="exp.spent ? 'text-red' : 'text-green'">
           {{ exp.spent ? 'Spent' : 'Received' }}
         </p>
       </ion-label>
 
-      <ion-button fill="clear" color="primary" (click)="editExpense(i)">
-        Edit
-      </ion-button>
-      <ion-button fill="clear" color="danger" (click)="deleteExpense(i)">
-        Delete
-      </ion-button>
+      <ion-buttons slot="end">
+        <ion-button fill="clear" color="primary" (click)="editExpense(i)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" color="danger" (click)="deleteExpense(i)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-item>
   </ion-list>
 
+  <!-- 🪶 No Data Placeholder -->
   <ng-template #noData>
-    <ion-text color="medium">
+    <ion-text color="medium" class="ion-text-center">
       <p>No expenses added yet. Click "+" to add one.</p>
     </ion-text>
   </ng-template>
 
+  <!-- ✅ Submit Button -->
   <ion-button
     expand="block"
     color="success"

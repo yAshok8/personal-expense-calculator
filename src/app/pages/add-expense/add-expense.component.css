@@ -20,3 +20,39 @@
   color: #28a745;
   font-weight: 500;
 }
+
+.summary-card {
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  background: var(--ion-color-light);
+  padding: 6px 0;
+}
+
+.summary-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.summary-icon {
+  font-size: 1.6rem;
+  vertical-align: middle;
+}
+
+.summary-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.summary-label {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.summary-amount {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+

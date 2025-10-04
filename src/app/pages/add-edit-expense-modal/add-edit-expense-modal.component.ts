@@ -30,11 +30,6 @@ export class AddEditExpenseModalComponent implements OnInit {
         || !this.expense.date) {
       return;
     }
-
-    const category = this.categories.find(c => c.id === this.expense.category.id)!;
-    const beneficiary = this.beneficiaries.find(c => c.id === this.expense.beneficiary.id)!;
-    this.expense.category = category;
-    this.expense.beneficiary = beneficiary;
     this._modalCtrl.dismiss(this.expense);
   }
 

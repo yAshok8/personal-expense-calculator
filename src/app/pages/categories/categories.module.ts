@@ -6,6 +6,7 @@ import {CategoriesRoutingModule} from "./categories.routing";
 import {CategoriesComponent} from "./categories.component";
 import {NgChartsModule} from "ng2-charts";
 import {AddCategoryModalComponent} from "../add-category-modal/add-category-modal.component";
+import {CategoryExpensePopoverComponent} from "./expense-category.popover.component";
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import {AddCategoryModalComponent} from "../add-category-modal/add-category-moda
   ],
   declarations: [
     CategoriesComponent,
-    AddCategoryModalComponent
+    AddCategoryModalComponent,
+    CategoryExpensePopoverComponent
   ]
 })
 export class CategoriesModule {}

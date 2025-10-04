@@ -5,6 +5,7 @@ import { HomeComponent } from "../home/home.component";
 import { ProfileComponent } from "../profile/profile.component";
 import {AddExpenseComponent} from "../add-expense/add-expense.component";
 import {HistoryComponent} from "../history/history.component";
+import {BeneficiariesComponent} from "../beneficiaries/beneficiaries.component";
 
 const routes: Routes = [
   {
@@ -51,6 +52,11 @@ const routes: Routes = [
         path: 'notes',
         loadChildren: () =>
           import('../notes/notes.module').then(m => m.NotesModule),
+      },
+      {
+        path: 'beneficiaries',
+        loadChildren: () =>
+          import('../beneficiaries/beneficiaries.module').then(m => m.BeneficiariesModule),
       }
     ]
   }

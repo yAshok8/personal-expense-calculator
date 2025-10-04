@@ -1,0 +1,14 @@
+ion-card {
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+ion-card-title {
+  font-weight: 600;
+  text-align: center;
+}
+
+.recharts-default-legend {
+  text-align: center;
+  font-size: 0.9rem;
+}

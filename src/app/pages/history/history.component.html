@@ -1,6 +1,11 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Expense History</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/home">
+        <ion-icon slot="icon-only" name="home-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -20,7 +25,7 @@
 
       <!-- Amount -->
       <ion-note slot="end" [ngClass]="exp.spent === 1 ? 'negative' : 'positive'">
-        {{ exp.spent === 1 ? '- ' : '+ ' }}{{ exp.amount | currency }}
+        {{ exp.spent === 1 ? '- ' : '+ ' }} SR {{ exp.amount }}
       </ion-note>
     </ion-item>
   </ion-list>

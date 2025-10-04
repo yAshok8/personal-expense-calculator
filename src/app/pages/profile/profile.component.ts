@@ -15,6 +15,7 @@ import {NotesService} from "../../services/notes.service";
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
+  //todo: change the name to backup and restore
 
   selectedFile: File | null = null;
   selectedFileName: string | null = null;

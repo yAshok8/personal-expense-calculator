@@ -118,4 +118,17 @@ export class AddExpenseComponent {
       this.navCtrl.back();
     }
   }
+
+  getTotalSpent(): number {
+    return this.expenses
+      .filter(e => e.spent)
+      .reduce((sum, e) => sum + (e.amount || 0), 0);
+  }
+
+  getTotalReceived(): number {
+    return this.expenses
+      .filter(e => !e.spent)
+      .reduce((sum, e) => sum + (e.amount || 0), 0);
+  }
+
 }

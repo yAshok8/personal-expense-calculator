@@ -4,6 +4,9 @@ import { BaseChartDirective } from "ng2-charts";
 import { ExpenseCategoryService } from "../../services/expense-category.service";
 import {AddCategoryModalComponent} from "../add-category-modal/add-category-modal.component";
 import {ModalController} from "@ionic/angular";
+import { PopoverController } from '@ionic/angular';
+import {CategoryExpensePopoverComponent} from "./expense-category.popover.component";
+
 
 @Component({
   selector: 'app-categories',
@@ -15,7 +18,8 @@ export class CategoriesComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
   constructor(
     private _categoriesService: ExpenseCategoryService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private popoverCtrl: PopoverController
   ) {}
 
   protected totalExpenses: number = 0;
@@ -107,5 +111,25 @@ export class CategoriesComponent implements OnInit {
       console.error("Error loading categories:", err);
     }
   }
+
+  async openCategoryDetails(ev: Event, categoryId: number) {
+    // const popover = await this.modalController.create({
+    //   component: CategoryExpensePopoverComponent,
+    //   componentProps: { categoryId },
+    //   cssClass: 'category-details-popover',
+    //   showBackdrop: true
+    // });
+    //
+    // await popover.present();
+    const popover = await this.popoverCtrl.create({
+      component: CategoryExpensePopoverComponent,
+      componentProps: { categoryId },
+      event: ev,
+      translucent: true
+    });
+
+    await popover.present();
+  }
+
 
 }

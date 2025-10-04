@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Beneficiaries</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/home">
+        <ion-icon slot="icon-only" name="home-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card *ngIf="beneficiaryTotals.length > 0; else noData">
+    <ion-card-content>
+      <canvas baseChart
+              [data]="pieChartData"
+              [type]="'pie'">
+      </canvas>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Breakdown</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let ben of beneficiaryTotals">
+          <ion-label>
+            <h2>{{ ben.name }}</h2>
+            <p>{{ ben.total | currency:'SAR' }}</p>
+          </ion-label>
+          <ion-badge color="secondary">{{ getPercentage(ben.total) }}%</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ng-template #noData>
+    <ion-text color="medium">
+      <p>No beneficiary data available for this month.</p>
+    </ion-text>
+  </ng-template>
+</ion-content>
