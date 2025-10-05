@@ -39,6 +39,7 @@ export class ItemsListComponent implements OnInit {
     this.beneficiaries = await this._beneficiariesService.fetchAllBeneficiaries();
     if (this.date) {
       this.items = await this.expenseDBService.getExpensesForDate(this.date);
+      console.log(this.items);
       this.calculateTotal();
     }
   }
@@ -48,12 +49,13 @@ export class ItemsListComponent implements OnInit {
   }
 
   async edit(expense: Expense) {
+    console.log(expense);
     const modal = await this.modalController.create({
       component: AddEditExpenseModalComponent,
       componentProps: {
-        expense: expense,
         categories: this.categories,
-        beneficiaries: this.beneficiaries
+        beneficiaries: this.beneficiaries,
+        expense: expense
       }
     });
     await modal.present();
@@ -71,18 +73,6 @@ export class ItemsListComponent implements OnInit {
         color: 'success'
       });
       await toast.present();
-    }
-  }
-
-  // Map categories to icons
-  getCategoryIcon(category: string): string {
-    switch (category.toLowerCase()) {
-      case 'food': return 'fast-food-outline';
-      case 'travel': return 'car-outline';
-      case 'shopping': return 'cart-outline';
-      case 'bills': return 'home-outline';
-      case 'entertainment': return 'film-outline';
-      default: return 'cash-outline';
     }
   }
 

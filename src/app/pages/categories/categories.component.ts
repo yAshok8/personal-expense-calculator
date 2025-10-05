@@ -69,13 +69,12 @@ export class CategoriesComponent implements OnInit {
 
   getCategoryIcon(name: string): string {
     const iconMap: Record<string, string> = {
-      'Food': 'restaurant-outline',
+      'Dineout': 'restaurant-outline',
       'Transport': 'car-outline',
       'Leisure': 'game-controller-outline',
       'Shopping': 'bag-outline',
       'Bills': 'cash-outline',
       'Health': 'fitness-outline',
-      'Travel': 'airplane-outline',
       'Other': 'ellipsis-horizontal-circle-outline'
     };
     return iconMap[name] || 'help-circle-outline'; // fallback
@@ -113,21 +112,12 @@ export class CategoriesComponent implements OnInit {
   }
 
   async openCategoryDetails(ev: Event, categoryId: number) {
-    // const popover = await this.modalController.create({
-    //   component: CategoryExpensePopoverComponent,
-    //   componentProps: { categoryId },
-    //   cssClass: 'category-details-popover',
-    //   showBackdrop: true
-    // });
-    //
-    // await popover.present();
     const popover = await this.popoverCtrl.create({
       component: CategoryExpensePopoverComponent,
       componentProps: { categoryId },
       event: ev,
       translucent: true
     });
-
     await popover.present();
   }
 

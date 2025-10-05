@@ -60,7 +60,6 @@ export class AddExpenseComponent {
   }
 
   async editExpense(index: number) {
-    console.log(this.expenses[index]);
     const modal = await this.modalCtrl.create({
       component: AddEditExpenseModalComponent,
       componentProps: {
@@ -79,7 +78,6 @@ export class AddExpenseComponent {
   }
 
   async submitAllExpenses() {
-    console.log(this.expenses);
     this._expenseDBService.saveExpense(this.expenses)
       .then(() => this._toastController.create({
         message: 'Expenses submitted successfully ✅',

@@ -61,25 +61,7 @@ export class ExpenseCategoryService {
       return res.values || [];
     });
 
-    if (!result || result.length === 0) return [];
-
-    // Take top 4 categories
-    const top4 = result.slice(0, 5);
-
-    // Group the rest into "Others"
-    if (result.length > 5) {
-      const othersTotal = result.slice(5).reduce((sum, r) => sum + r.total, 0);
-      top4.push({ id: -1, name: "Others", total: othersTotal });
-    }
-
-    return top4;
+    return result;
   }
-
-  async truncateCategories(): Promise<void> {
-    return this._dbService.executeQuery(async (db) => {
-      await db.run(`DELETE FROM categories`);
-    });
-  }
-
 
 }

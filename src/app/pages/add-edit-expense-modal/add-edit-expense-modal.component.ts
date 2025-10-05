@@ -22,6 +22,15 @@ export class AddEditExpenseModalComponent implements OnInit {
     }
   }
 
+  compareCategory = (c1: any, c2: any) => {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
+  };
+
+  compareBeneficiary = (b1: any, b2: any) => {
+    return b1 && b2 ? b1.id === b2.id : b1 === b2;
+  };
+
+
   addExpense() {
     if (!this.expense.itemName ||
         !this.expense.amount ||

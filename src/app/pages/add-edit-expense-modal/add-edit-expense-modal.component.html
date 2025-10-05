@@ -46,7 +46,11 @@
       <ion-col>
         <ion-item>
           <ion-label position="stacked">Category</ion-label>
-          <ion-select [(ngModel)]="expense.category" interface="alert">
+          <ion-select
+            [(ngModel)]="expense.category"
+            interface="alert"
+            [compareWith]="compareCategory"
+          >
             <ion-select-option *ngFor="let c of categories" [value]="c">
               {{ c.name }}
             </ion-select-option>
@@ -56,7 +60,10 @@
       <ion-col>
         <ion-item>
           <ion-label position="stacked">Beneficiary</ion-label>
-          <ion-select [(ngModel)]="expense.beneficiary" interface="alert">
+          <ion-select
+            [(ngModel)]="expense.beneficiary"
+            [compareWith]="compareBeneficiary"
+          >
             <ion-select-option *ngFor="let b of beneficiaries" [value]="b">
               {{ b.name }}
             </ion-select-option>
