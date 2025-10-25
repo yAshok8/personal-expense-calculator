@@ -1,0 +1,19 @@
+<ion-list *ngIf="beneficiaryExpenses.length > 0; else noData">
+  <ion-item *ngFor="let exp of beneficiaryExpenses">
+    <ion-label>
+      <h3>{{ exp.item_name }}</h3>
+      <p>{{ exp.date | date:'mediumDate' }}</p>
+    </ion-label>
+    <ion-badge color="primary">{{ exp.amount | number:'1.2-2' }} SAR</ion-badge>
+  </ion-item>
+</ion-list>
+
+<ng-template #noData>
+  <ion-text color="medium">
+    <p>No expenses for this category this month.</p>
+  </ion-text>
+</ng-template>
+
+<ion-button expand="block" fill="clear" color="medium" (click)="close()">
+  Close
+</ion-button>

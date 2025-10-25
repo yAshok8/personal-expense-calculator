@@ -1,8 +1,9 @@
-
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ChartData } from 'chart.js';
-import { BaseChartDirective } from "ng2-charts";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ChartData} from 'chart.js';
+import {BaseChartDirective} from "ng2-charts";
 import {ExpenseBeneficiaryService} from "../../services/beneficiary.service";
+import {BeneficiaryPopoverComponent} from "./beneficiary-popover.component";
+import {PopoverController} from "@ionic/angular";
 
 @Component({
   selector: 'app-beneficiary-chart',
@@ -13,7 +14,8 @@ export class BeneficiariesComponent implements OnInit {
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-  constructor(private _beneficiaryService: ExpenseBeneficiaryService) {}
+  constructor(private _beneficiaryService: ExpenseBeneficiaryService,
+              private popoverCtrl: PopoverController) {}
 
   protected totalAmount: number = 0;
   protected beneficiaryTotals: { id: number; name: string; total: number }[] = [];
@@ -63,4 +65,15 @@ export class BeneficiariesComponent implements OnInit {
     if (!this.totalAmount) return 0;
     return Math.round((total / this.totalAmount) * 100);
   }
+
+  async openBeneficiaryExpenses(ev: Event, beneficiaryId: number) {
+    const popover = await this.popoverCtrl.create({
+      component: BeneficiaryPopoverComponent,
+      componentProps: { beneficiaryId: beneficiaryId },
+      event: ev,
+      translucent: true
+    });
+    await popover.present();
+  }
+
 }

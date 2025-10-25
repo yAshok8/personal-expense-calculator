@@ -32,12 +32,19 @@ ion-card h3 {
 .text-red {
   color: var(--ion-color-danger);
 }
+.text-primary {
+  color: var(--ion-color-primary);
+}
 .text-green {
   color: var(--ion-color-success);
 }
 .amount-red {
   font-weight: bold;
   color: var(--ion-color-danger);
+}
+.amount-primary {
+  font-weight: bold;
+  color: var(--ion-color-primary);
 }
 .amount-green {
   font-weight: bold;

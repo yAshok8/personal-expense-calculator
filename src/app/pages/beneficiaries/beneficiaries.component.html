@@ -23,13 +23,21 @@
     <ion-card-header>
       <ion-card-title>Breakdown</ion-card-title>
     </ion-card-header>
+
     <ion-card-content>
       <ion-list>
-        <ion-item *ngFor="let ben of beneficiaryTotals">
+        <ion-item *ngFor="let ben of beneficiaryTotals" (click)="openBeneficiaryExpenses($event, ben.id)">
           <ion-label>
-            <h2>{{ ben.name }}</h2>
+            <h2 style="display: flex; align-items: center; gap: 6px;">
+              {{ ben.name }}
+              <ion-icon
+                name="information-circle-outline"
+                style="font-size: 16px; color: var(--ion-color-medium);"
+              ></ion-icon>
+            </h2>
             <p>{{ ben.total | currency:'SAR' }}</p>
           </ion-label>
+
           <ion-badge color="secondary">{{ getPercentage(ben.total) }}%</ion-badge>
         </ion-item>
       </ion-list>

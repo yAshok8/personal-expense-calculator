@@ -5,6 +5,7 @@ import {IonicModule} from '@ionic/angular';
 import {BeneficiariesComponent} from "./beneficiaries.component";
 import {BeneficiariesRouting} from "./beneficiaries-routing";
 import {NgChartsModule} from "ng2-charts";
+import {BeneficiaryPopoverComponent} from "./beneficiary-popover.component";
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import {NgChartsModule} from "ng2-charts";
     NgChartsModule
   ],
   declarations: [
-    BeneficiariesComponent
+    BeneficiariesComponent,
+    BeneficiaryPopoverComponent
   ]
 })
 export class BeneficiariesModule {}
