@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
-import { FormsModule } from '@angular/forms';
-import { ExpenseDbService } from '../../services/expense.service';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {IonicModule} from '@ionic/angular';
+import {FormsModule} from '@angular/forms';
+import {ExpenseDbService} from '../../services/expense.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-summary',
@@ -18,9 +18,10 @@ export class SummaryComponent implements OnInit {
   totalSpent = 0;
   totalReceived = 0;
   finalExpense = 0;
-  topCategory = '';
-  topBeneficiary = '';
   months: Date[] = [];
+  categories: { name: string, total: number }[] = [];
+  beneficiaries: { name: string, total: number }[] = [];
+
 
   constructor(
     private expenseDb: ExpenseDbService,
@@ -53,30 +54,24 @@ export class SummaryComponent implements OnInit {
     const year = this.selectedMonth.getFullYear().toString();
     const month = (this.selectedMonth.getMonth() + 1).toString().padStart(2, '0');
 
-    // fetch in parallel
     const [
       spent,
       received,
-      category,
-      beneficiary
+      categories,
+      beneficiaries
     ] = await Promise.all([
       this.expenseDb.getTotalSpent(year, month),
       this.expenseDb.getTotalReceived(year, month),
-      this.expenseDb.getTopCategory(year, month),
-      this.expenseDb.getTopBeneficiary(year, month)
+      this.expenseDb.getCategoriesByExpenseDesc(year, month),
+      this.expenseDb.getBeneficiariesByExpenseDesc(year, month)
     ]);
 
     this.totalSpent = spent || 0;
     this.totalReceived = received || 0;
     this.finalExpense = this.totalSpent - this.totalReceived;
 
-    this.topCategory = category
-      ? `${category.name} - ${Number(category.total).toFixed(2)} SR`
-      : 'N/A';
-
-    this.topBeneficiary = beneficiary
-      ? `${beneficiary.name} - ${Number(beneficiary.total).toFixed(2)} SR`
-      : 'N/A';
-
+    this.categories = categories || [];
+    this.beneficiaries = beneficiaries || [];
   }
+
 }

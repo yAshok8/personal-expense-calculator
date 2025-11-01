@@ -100,7 +100,7 @@ export class MigrationService {
   }
 
   async insertDefaultBeneficiaries(): Promise<any> {
-    const beneficiaries = ["Ashok", "Babita", "Vedant", "Family", "Saudi Home"];
+    const beneficiaries = ["Ashok", "Babita", "Vedant", "Family", "Saudi Home", "Mummy"];
     const insertBeneficiarySql = `INSERT
     OR IGNORE INTO beneficiaries (name) VALUES (?);`;
 

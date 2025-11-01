@@ -5,7 +5,7 @@ import { PopoverController } from '@ionic/angular';
 @Component({
   selector: 'app-beneficiary-expense-popover',
   templateUrl: './beneficiary-popover.component.html',
-  styleUrls: ['']
+  styleUrls: ['./beneficiaries.component.css']
 })
 export class BeneficiaryPopoverComponent implements OnInit {
   @Input() beneficiaryId!: number;
