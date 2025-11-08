@@ -116,7 +116,8 @@ export class CategoriesComponent implements OnInit {
       component: CategoryExpensePopoverComponent,
       componentProps: { categoryId },
       event: ev,
-      translucent: true
+      translucent: true,
+      cssClass: 'category-popover-class'
     });
     await popover.present();
   }

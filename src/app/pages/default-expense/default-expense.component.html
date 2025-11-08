@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="confirmBack()">
+        <ion-icon name="home-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Default Expenses</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Add / Edit Form -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ newExpense.id ? 'Edit Expense' : 'Add Default Expense' }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Expense Name</ion-label>
+        <ion-input [(ngModel)]="newExpense.name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Amount</ion-label>
+        <ion-input type="number" [(ngModel)]="newExpense.amount"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Beneficiary</ion-label>
+        <ion-select [(ngModel)]="newExpense.beneficiaryId" placeholder="Select Beneficiary" interface="popover">
+          <ion-select-option *ngFor="let b of beneficiaries" [value]="b.id">
+            {{ b.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-button expand="block" color="success" (click)="saveExpense()">
+        {{ newExpense.id ? 'Update' : 'Add' }}
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- List of Expenses -->
+  <ion-list>
+    <ion-item *ngFor="let exp of defaultExpenses">
+      <ion-label>
+        <h2>{{ exp.name }}</h2>
+        <p>{{ exp.beneficiaryName }} | {{ exp.amount | number:'1.2-2' }} SAR</p>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button color="primary" (click)="editExpense(exp)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button color="danger" (click)="deleteExpense(exp.id)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

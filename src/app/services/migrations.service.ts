@@ -61,6 +61,14 @@ export const createSchemaExpenseItem: string = `
   END;
 `;
 
+export const createDefaultExpense: string = `CREATE TABLE IF NOT EXISTS default_expense (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  amount REAL NOT NULL,
+  beneficiaryId INTEGER NOT NULL,
+  FOREIGN KEY (beneficiaryId) REFERENCES beneficiaries(id) ON DELETE CASCADE ON UPDATE CASCADE
+  );`;
+
 @Injectable()
 export class MigrationService {
 
@@ -73,6 +81,7 @@ export class MigrationService {
     // await this.insertDefaultBeneficiaries();
     await this.createExpenseItem();
     await this.createNotesTable();
+    await this.createDefaultExpenseTable();
   }
 
   async createExpenseItem(): Promise<any> {
@@ -96,6 +105,12 @@ export class MigrationService {
   async createNotesTable(): Promise<any> {
     await this.databaseService.executeQuery(async (db) => {
       await db.execute(createNotesTable);
+    });
+  }
+
+  async createDefaultExpenseTable(): Promise<any> {
+    await this.databaseService.executeQuery(async (db) => {
+      await db.execute(createDefaultExpense);
     });
   }
 

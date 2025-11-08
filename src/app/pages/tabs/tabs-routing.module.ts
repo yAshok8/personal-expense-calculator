@@ -6,6 +6,7 @@ import { ProfileComponent } from "../profile/profile.component";
 import {AddExpenseComponent} from "../add-expense/add-expense.component";
 import {HistoryComponent} from "../history/history.component";
 import {BeneficiariesComponent} from "../beneficiaries/beneficiaries.component";
+import {DefaultExpenseComponent} from "../default-expense/default-expense.component";
 
 const routes: Routes = [
   {
@@ -57,6 +58,10 @@ const routes: Routes = [
         path: 'beneficiaries',
         loadChildren: () =>
           import('../beneficiaries/beneficiaries.module').then(m => m.BeneficiariesModule),
+      },
+      {
+        path: 'default-expenses',
+        component: DefaultExpenseComponent
       }
     ]
   }

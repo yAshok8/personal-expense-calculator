@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ExpenseDbService} from "../../services/expense.service";
 import {Router} from "@angular/router";
+import {DefaultExpenseDbService} from "../../services/default-expense.service";
 
 interface ExpenseDay {
   date: string;
@@ -17,12 +18,14 @@ export class ExpenseComponent implements OnInit {
 
   expenseDates: ExpenseDay[] = [];
   monthlyTotalSpent: number = 0;
+  defaultExpenseAmount: number = 0;
   monthlyTotalReceived: number = 0;
   totalDays: number = 0;
   averageExpensePerDay: number = 0;
 
   constructor(
     private _expenseDBService: ExpenseDbService,
+    private _defaultExpenseService: DefaultExpenseDbService,
     private _router: Router
   ) {}
 
@@ -35,6 +38,7 @@ export class ExpenseComponent implements OnInit {
   async ionViewWillEnter() {
     try {
       this.expenseDates = await this._expenseDBService.getPerDayTotalsForCurrentMonth();
+      this.defaultExpenseAmount = await this._defaultExpenseService.getTotalDefaultExpenseAmount();
       this.calculateSummary();
     } catch (err) {
       console.error("Error loading expense dates and categories:", err);
