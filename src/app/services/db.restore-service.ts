@@ -30,57 +30,84 @@ export class DbRestoreService {
       created_at: string;
       updated_at: string;
     }[];
+    default_expenses: {
+      id: number;
+      name: string;
+      amount: number;
+      beneficiaryId: number;
+    }[];
   }): Promise<void> {
     await this._dbService.executeQuery(async (db) => {
       await db.execute('DELETE FROM expense_item');
       await db.execute('DELETE FROM categories');
       await db.execute('DELETE FROM beneficiaries');
       await db.execute('DELETE FROM notes');
+      await db.execute('DELETE FROM default_expense');
 
       await db.execute(`DELETE FROM sqlite_sequence WHERE name='categories'`);
       await db.execute(`DELETE FROM sqlite_sequence WHERE name='beneficiaries'`);
       await db.execute(`DELETE FROM sqlite_sequence WHERE name='expense_item'`);
       await db.execute(`DELETE FROM sqlite_sequence WHERE name='notes'`);
+      await db.execute(`DELETE FROM sqlite_sequence WHERE name='default_expense'`);
 
-      for (const cat of jsonData.categories) {
-        await db.run(
-          `INSERT INTO categories (id, name) VALUES (?, ?)`,
-          [cat.id, cat.name]
-        );
+      if (Array.isArray(jsonData.categories) && jsonData.categories.length > 0) {
+        for (const cat of jsonData.categories) {
+          await db.run(
+            `INSERT INTO categories (id, name) VALUES (?, ?)`,
+            [cat.id, cat.name]
+          );
+        }
       }
 
-      for (const ben of jsonData.beneficiaries) {
-        await db.run(
-          `INSERT INTO beneficiaries (id, name) VALUES (?, ?)`,
-          [ben.id, ben.name]
-        );
+      if (Array.isArray(jsonData.beneficiaries) && jsonData.beneficiaries.length > 0) {
+        for (const ben of jsonData.beneficiaries) {
+          await db.run(
+            `INSERT INTO beneficiaries (id, name) VALUES (?, ?)`,
+            [ben.id, ben.name]
+          );
+        }
       }
 
-      for (const item of jsonData.expense_item) {
-        await db.run(
-          `INSERT INTO expense_item (id, date, item_name, amount, category_id, beneficiary_id, spent, created_date, updated_date)
+      if (Array.isArray(jsonData.expense_item) && jsonData.expense_item.length > 0) {
+        for (const item of jsonData.expense_item) {
+          await db.run(
+            `INSERT INTO expense_item (id, date, item_name, amount, category_id, beneficiary_id, spent, created_date, updated_date)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          [
-            item.id,
-            item.date,
-            item.item_name,
-            item.amount,
-            item.category_id,
-            item.beneficiary_id,
-            item.spent,
-            item.created_date,
-            item.updated_date
-          ]
-        );
+            [
+              item.id,
+              item.date,
+              item.item_name,
+              item.amount,
+              item.category_id,
+              item.beneficiary_id,
+              item.spent,
+              item.created_date,
+              item.updated_date
+            ]
+          );
+        }
       }
 
-      for (const note of jsonData.notes) {
-        await db.run(
-          `INSERT INTO notes (id, date, name, created_at, updated_at)
+      if (Array.isArray(jsonData.notes) && jsonData.notes.length > 0) {
+        for (const note of jsonData.notes) {
+          await db.run(
+            `INSERT INTO notes (id, date, name, created_at, updated_at)
          VALUES (?, ?, ?, ?, ?)`,
-          [note.id, note.date, note.name, note.created_at, note.updated_at]
-        );
+            [note.id, note.date, note.name, note.created_at, note.updated_at]
+          );
+        }
       }
+
+      if (Array.isArray(jsonData.default_expenses) && jsonData.default_expenses.length > 0) {
+        for (const default_expense of jsonData.default_expenses) {
+          await db.run(
+            `INSERT INTO default_expense (id, name, amount, beneficiaryId)
+         VALUES (?, ?, ?, ?)`,
+            [default_expense.id, default_expense.name, default_expense.amount, default_expense.beneficiaryId]
+          );
+        }
+      }
+
     });
 
     console.log('Database restored successfully!');

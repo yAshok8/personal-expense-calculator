@@ -8,6 +8,7 @@ import {Share} from '@capacitor/share';
 import {Directory, Encoding, Filesystem} from "@capacitor/filesystem";
 import {ExpenseBeneficiaryService} from "../../services/beneficiary.service";
 import {NotesService} from "../../services/notes.service";
+import {DefaultExpenseDbService} from "../../services/default-expense.service";
 
 @Component({
   selector: 'app-profile',
@@ -26,20 +27,23 @@ export class ProfileComponent {
     private beneficiaryDBService: ExpenseBeneficiaryService,
     private restoreDbService: DbRestoreService,
     private toastController: ToastController,
-    private notesDBService: NotesService
+    private notesDBService: NotesService,
+    private defaultExpenseDbService: DefaultExpenseDbService,
   ) {}
 
   async downloadDatabase() {
     const categories = await this.catDBService.getAllCategories();
     const beneficiaries = await this.beneficiaryDBService.fetchAllBeneficiaries();
     const expenseItems = await this.expDBService.getAllExpenseItems();
+    const defaultExpenses = await this.defaultExpenseDbService.getAllDefaultExpenses();
     const notes = await this.notesDBService.fetchAllNotes();
 
     const data = {
       categories: categories || [],
       beneficiaries: beneficiaries || [],
       expense_item: expenseItems || [],
-      notes: notes || []  // ← include notes
+      notes: notes || [],
+      default_expenses: defaultExpenses || []
     };
 
     const jsonString = JSON.stringify(data, null, 2);

@@ -1,0 +1,11 @@
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hint-text {
+  font-size: 0.8em;
+  color: var(--ion-color-medium);
+  font-style: italic;
+}
